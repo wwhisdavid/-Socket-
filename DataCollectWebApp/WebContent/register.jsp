@@ -29,7 +29,7 @@
 			<tr>
 				<th>用户名</th>
 			<td align="center">
-				<input type="text" name="userName"/>
+				<input type="text" name="username"/>
 				${requestScope.message}
 			</td>
 		</tr>

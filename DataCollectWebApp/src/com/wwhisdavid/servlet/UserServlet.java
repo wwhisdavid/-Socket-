@@ -1,16 +1,22 @@
 package com.wwhisdavid.servlet;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Enumeration;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.beanutils.BeanUtils;
+
 import com.wwhisdavid.entity.UserEntity;
 import com.wwhisdavid.exception.UserExistsException;
 import com.wwhisdavid.service.UserService;
 import com.wwhisdavid.service.impl.UserServiceImpl;
+import com.wwhisdavid.util.WebBeanUtil;
 
 /**
  * Servlet implementation class UserServlet
@@ -51,13 +57,13 @@ public class UserServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
 		// 1.获取请求参数
-		String userName = request.getParameter("userName");
-		String password = request.getParameter("password");
-		System.out.println(userName + password);
-		UserEntity userEntity = new UserEntity();
-		userEntity.setUsername(userName);
-		userEntity.setPassword(password);
-		
+//		String userName = request.getParameter("userName");
+//		String password = request.getParameter("password");
+//		System.out.println(userName + password);
+//		UserEntity userEntity = new UserEntity();
+//		userEntity.setUsername(userName);
+//		userEntity.setPassword(password);
+		UserEntity userEntity = WebBeanUtil.copyToBean(request, UserEntity.class);
 		try {
 			service.register(userEntity);
 			request.setAttribute("message", "注册成功！");
