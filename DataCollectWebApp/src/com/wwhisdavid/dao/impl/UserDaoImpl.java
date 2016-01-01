@@ -5,11 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.wwhisdavid.dao.BaseDao;
 import com.wwhisdavid.dao.UserDao;
 import com.wwhisdavid.entity.UserEntity;
 import com.wwhisdavid.util.JdbcUtil;
 
-public class UserDaoImpl implements UserDao {
+public class UserDaoImpl extends BaseDao implements UserDao {
 	private Connection conn;
 	private PreparedStatement pstmt;
 	private ResultSet rs;
@@ -17,19 +18,20 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public void register(UserEntity user) {
 		String sql = "insert into user(username,password) values(?,?)";
-
-		try {
-			conn = JdbcUtil.getConnection();
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, user.getUsername());
-			pstmt.setString(2, user.getPassword());
-
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			JdbcUtil.close(conn, pstmt);
-		}
+		Object[] parameters = {user.getUsername(),user.getPassword()};
+		super.update(sql, parameters);
+//		try {
+//			conn = JdbcUtil.getConnection();
+//			pstmt = conn.prepareStatement(sql);
+//			pstmt.setString(1, user.getUsername());
+//			pstmt.setString(2, user.getPassword());
+//
+//			pstmt.executeUpdate();
+//		} catch (SQLException e) {
+//			throw new RuntimeException(e);
+//		} finally {
+//			JdbcUtil.close(conn, pstmt);
+//		}
 	}
 
 	public UserEntity findByNameAndPwd(UserEntity user) {
