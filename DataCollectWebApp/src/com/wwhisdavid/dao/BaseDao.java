@@ -11,7 +11,6 @@ public class BaseDao {
 	private Connection connection;
 	private PreparedStatement pstmt;
 	public void update(String sql, Object[] parameters){
-		
 		try {
 			connection = JdbcUtil.getConnection();
 			pstmt = connection.prepareStatement(sql);
@@ -29,6 +28,7 @@ public class BaseDao {
 		} finally {
 			JdbcUtil.close(connection, pstmt);
 		}	
-		
 	}
+	
+	
 }
