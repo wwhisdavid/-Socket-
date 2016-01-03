@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
+import org.apache.commons.dbutils.QueryRunner;
+
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 /**
@@ -61,6 +63,14 @@ public class JdbcUtil {
 //			System.out.println("驱动程序注册出错");
 //		}
 //	}
+	public static QueryRunner getRunner(){
+		try {
+			return new QueryRunner(new ComboPooledDataSource());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	/**
 	 * 抽取获取连接对象的方法
