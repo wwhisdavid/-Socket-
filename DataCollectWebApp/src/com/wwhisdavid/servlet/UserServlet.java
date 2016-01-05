@@ -54,16 +54,16 @@ public class UserServlet extends HttpServlet {
 	}
 
 	private void register(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-		request.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html;charset=UTF-8");
+
 		// 1.获取请求参数
-//		String userName = request.getParameter("userName");
-//		String password = request.getParameter("password");
-//		System.out.println(userName + password);
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		System.out.println(username +":"+ password);
 //		UserEntity userEntity = new UserEntity();
 //		userEntity.setUsername(userName);
 //		userEntity.setPassword(password);
 		UserEntity userEntity = WebBeanUtil.copyToBean(request, UserEntity.class);
+		System.out.println(userEntity.getUsername() +":"+ userEntity.getPassword());
 		try {
 			service.register(userEntity);
 			request.setAttribute("message", "注册成功！");

@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>系统忙，稍后再试！</title>
 </head>
 <body>
 	系统忙，稍后再试！
