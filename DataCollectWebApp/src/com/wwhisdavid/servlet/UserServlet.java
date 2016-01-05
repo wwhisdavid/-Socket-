@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.BeanUtils;
 
@@ -42,6 +43,8 @@ public class UserServlet extends HttpServlet {
 		String method = request.getParameter("method");
 		if ("register".equals(method)) {
 			this.register(request, response);
+		} else if("login".equals(method)){
+			this.login(request, response);
 		}
 	}
 
@@ -56,9 +59,9 @@ public class UserServlet extends HttpServlet {
 	private void register(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
 
 		// 1.获取请求参数
-		String username = request.getParameter("username");
-		String password = request.getParameter("password");
-		System.out.println(username +":"+ password);
+//		String username = request.getParameter("username");
+//		String password = request.getParameter("password");
+//		System.out.println(username +":"+ password);
 //		UserEntity userEntity = new UserEntity();
 //		userEntity.setUsername(userName);
 //		userEntity.setPassword(password);
@@ -67,13 +70,33 @@ public class UserServlet extends HttpServlet {
 		try {
 			service.register(userEntity);
 			request.setAttribute("message", "注册成功！");
-			request.getRequestDispatcher("/index.jsp").forward(request, response);
+			request.getRequestDispatcher("/login.jsp").forward(request, response);
 		} catch (UserExistsException e) {
 			request.setAttribute("message", "用户名已存在！");
 			request.getRequestDispatcher("/register.jsp").forward(request, response);
 		} catch (Exception e) {
 			response.sendRedirect(request.getContextPath() + "/error/error.jsp");
 		}
-		
+	}
+	
+	private void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		UserEntity userEntity = WebBeanUtil.copyToBean(request, UserEntity.class);
+		// 登陆校验
+		UserEntity userEntity2 = service.login(userEntity);
+		if (userEntity2 == null) {
+			// 登陆失败
+			request.setAttribute("message", "账号密码错误！");
+			request.getRequestDispatcher("/login.jsp").forward(request, response);
+		}
+		else {
+			// 登陆成功
+			/**
+			 *登录成功后，把用户数据保存session对象中
+			 */
+			HttpSession session = request.getSession();
+			session.setAttribute("loginName", userEntity2.getUsername());
+			// 跳转到需要到的界面
+			request.getRequestDispatcher("/ProjectListServlet").forward(request, response);
+		}
 	}
 }

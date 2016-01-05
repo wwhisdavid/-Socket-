@@ -5,26 +5,27 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>节点列表</title>
+<title>项目列表</title>
 </head>
 <body>
+	<div><c:out value="${requestScope.loginName}"></c:out></div>
 	<table border="1" width="80%" align="center" cellpadding="5" cellspacing="0">
 		<tr>
 			<th>序号</th>
-			<th>节点ID</th>
-			<th>节点名</th>
-			<th>节点经度</th>
-			<th>节点纬度</th>
+			<th>项目ID</th>
+			<th>项目名</th>
+			<th>项目简介</th>
+			<th>选项</th>
 		</tr>
 		<c:choose>
 			<c:when test="${not empty requestScope.pageBean.pageData}">
 				<c:forEach var="node" items="${requestScope.pageBean.pageData}" varStatus="vs">
 					<tr>
   						<td>${vs.count }</td>
-  						<td>${node.node_id }</td>
+  						<td>${node.project_id }</td>
   						<td>${node.name }</td>
-  						<td>${node.logitude }</td>
-  						<td>${node.latitude }</td>
+  						<td>${node.description }</td>
+  						<td></td>
   					</tr>
 				</c:forEach>
 			</c:when>
@@ -38,12 +39,10 @@
   			<td colspan="5" align="center">
   				当前${requestScope.pageBean.currentPage }/${requestScope.pageBean.totalPage }页     &nbsp;&nbsp;
   				
-  				<a href="${pageContext.request.contextPath }/NodeListServlet?mode=nomal&currentPage=1">首页</a>
-  				<a href="${pageContext.request.contextPath }/NodeListServlet?mode=nomal&currentPage=${requestScope.pageBean.currentPage-1}">上一页 </a>
-  				<a href="${pageContext.request.contextPath }/NodeListServlet?mode=nomal&currentPage=${requestScope.pageBean.currentPage+1}">下一页 </a>
-  				<a href="${pageContext.request.contextPath }/NodeListServlet?mode=nomal&currentPage=${requestScope.pageBean.totalPage}">末页</a>
-  				&nbsp;&nbsp;
-  				<a href="${pageContext.request.contextPath }/NodeListServlet?mode=map">地图模式</a>
+  				<a href="${pageContext.request.contextPath }/ProjectListServlet&currentPage=1">首页</a>
+  				<a href="${pageContext.request.contextPath }/ProjectListServlet&currentPage=${requestScope.pageBean.currentPage-1}">上一页 </a>
+  				<a href="${pageContext.request.contextPath }/ProjectListServlet&currentPage=${requestScope.pageBean.currentPage+1}">下一页 </a>
+  				<a href="${pageContext.request.contextPath }/ProjectListServlet&currentPage=${requestScope.pageBean.totalPage}">末页</a>
   			</td>
   		</tr>
 	</table>

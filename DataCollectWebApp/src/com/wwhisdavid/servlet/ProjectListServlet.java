@@ -7,24 +7,27 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.wwhisdavid.dao.ANodeDao;
+import com.sun.jndi.toolkit.url.Uri;
 import com.wwhisdavid.entity.ANodeEntity;
-import com.wwhisdavid.service.ANodeService;
-import com.wwhisdavid.service.impl.ANodeServiceImpl;
+import com.wwhisdavid.entity.ProjectListEntity;
+import com.wwhisdavid.service.ProjectService;
+import com.wwhisdavid.service.impl.ProjectServiceImpl;
 import com.wwhisdavid.util.PageBean;
 
 /**
- * Servlet implementation class NodeListServlet
+ * Servlet implementation class ProjectListServlet
  */
-@WebServlet("/NodeListServlet")
-public class NodeListServlet extends HttpServlet {
+@WebServlet("/ProjectListServlet")
+public class ProjectListServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    private ANodeService nodeService = new ANodeServiceImpl();
-    String uri;
+	private ProjectService projectService = new ProjectServiceImpl();
+	private String uri = null;
+	
+       
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public NodeListServlet() {
+    public ProjectListServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,35 +37,32 @@ public class NodeListServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			String currentPage = request.getParameter("currentPage");
-			String mode = request.getParameter("mode");
-			if (currentPage == null || "".equals(currentPage.trim())) {
-				currentPage = "1";
+			String currPage = request.getParameter("currentPage");
+			if (currPage == null || "".equals(currPage)) {
+				currPage = "1";
 			}
+			
 			// 得到页数
-			int currPage = Integer.parseInt(currentPage);
+			int currentPage = Integer.parseInt(currPage);
+						
+			PageBean<ProjectListEntity> pb = new PageBean<ProjectListEntity>();
+			pb.setCurrentPage(currentPage);
 			
-			PageBean<ANodeEntity> pb = new PageBean<ANodeEntity>();
-			pb.setCurrentPage(currPage);
-			
-			nodeService.getAll(pb);
+			projectService.getAll(pb);
 			request.setAttribute("pageBean", pb);
-			if (mode.equals("map")) {
-				uri = "/nodelistinmap.jsp";
-			}else{
-				uri = "/nodelist.jsp";
-			}
-		} catch(Exception exception) {
+			uri = "/projectlist.jsp";
+		} catch (Exception exception) {
 			exception.printStackTrace();
 			uri = "/error/error.jsp";
-		}		
+		}	
 		request.getRequestDispatcher(uri).forward(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 
