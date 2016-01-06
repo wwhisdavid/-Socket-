@@ -20,7 +20,7 @@ import com.sun.jndi.toolkit.url.Uri;
  * Servlet Filter implementation class EncodingFilter
  */
 @WebFilter(dispatcherTypes = { DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE,
-		DispatcherType.ERROR }, urlPatterns = { "/he" })
+		DispatcherType.ERROR }, urlPatterns = { "/*" })
 public class LoginFilter implements Filter {
 
 	/**

@@ -45,11 +45,12 @@ public class UserServlet extends HttpServlet {
 		if ("register".equals(method)) {
 			this.register(request, response);
 		} else if("login".equals(method)){
-			if (loginName != null || !"".equals(loginName)) {
+			System.out.println("loginname:"+loginName);
+			if (loginName == null || "".equals(loginName)) {
+				this.login(request, response);
+			}else{
 				// 跳转到需要到的界面
 				request.getRequestDispatcher("/ProjectListServlet").forward(request, response);
-			}else{
-				this.login(request, response);
 			}
 		}
 	}

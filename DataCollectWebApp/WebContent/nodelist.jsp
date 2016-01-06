@@ -8,6 +8,7 @@
 <title>节点列表</title>
 </head>
 <body>
+	<div style="height:50px;text-align:right;">您好，<c:out value="${sessionScope.loginName}"/> &nbsp;&nbsp;<a href="#">退出登陆</a></div>
 	<table border="1" width="80%" align="center" cellpadding="5" cellspacing="0">
 		<tr>
 			<th>序号</th>

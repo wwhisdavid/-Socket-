@@ -24,13 +24,12 @@
 
 	<form name="form1" action="${pageContext.request.contextPath }/UserServlet?method=register" method="post" >
 		<div style="height:200px"></div>
-		
+		<div style="text-align:center;color:#F00">${requestScope.message}</div>
 		<table align="center" width="400px" bgcolor="white" >
 			<tr>
 				<th>用户名</th>
 			<td align="center">
 				<input type="text" name="username"/>
-				${requestScope.message}
 			</td>
 		</tr>
 			

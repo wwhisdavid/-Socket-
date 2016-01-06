@@ -8,8 +8,8 @@
 <title>项目列表</title>
 </head>
 <body>
-	<c:out value="${requestScope.loginName}"></c:out>
-	<div style="height:10px">${requestScope.loginName}</div>
+	
+	<div style="height:50px;text-align:right;">欢迎回来，<c:out value="${sessionScope.loginName}"/> &nbsp;&nbsp;<a href="#">退出登陆</a></div>
 	<table border="1" width="80%" align="center" cellpadding="5" cellspacing="0">
 		<tr>
 			<th>序号</th>

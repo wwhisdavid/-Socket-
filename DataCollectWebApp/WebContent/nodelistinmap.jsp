@@ -12,7 +12,7 @@
 </head>
 <body>
 
-
+	<div style="height:50px;text-align:right;">您好，<c:out value="${sessionScope.loginName}"/> &nbsp;&nbsp;<a href="#">退出登陆</a></div>
 	<div class="demo_main">
 		<fieldset class="demo_title">百度地图API显示多个标注点带提示的代码</fieldset>
 		<fieldset class="demo_content">
@@ -131,6 +131,8 @@
 
             point[i] = new window.BMap.Point(p0, p1); //循环生成新的地图点
             marker[i] = new window.BMap.Marker(point[i]); //按照地图点坐标生成标记
+            /* point.push(new window.BMap.Point(p0, p1));
+            marker.push(new window.BMap.Marker(point[i])); */
             map.addOverlay(marker[i]);
             /* marker[i].setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画  */
             var label = new window.BMap.Label(array[i].name, {
@@ -143,11 +145,12 @@
                             + "</br> 节点id：" + array[i].node_id 
                             + "</br> 经纬度：" + array[i].longitude + ' , ' + array[i].latitude + "</br></p>"); // 创建信息窗口对象 
         }
+        
         marker[0].addEventListener("mouseover", function() {
     		this.openInfoWindow(info[0]);
 			});
         marker[0].addEventListener("click", function() {
-    		alert('hello world');
+        	window.location.href = "${pageContext.request.contextPath }"+'/index.jsp';
 			});
         marker[1].addEventListener("mouseover", function() {
     		this.openInfoWindow(info[1]);

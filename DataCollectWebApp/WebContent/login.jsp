@@ -12,16 +12,14 @@
 <title>登陆</title>
 </head>
 <body style="background-image:url('http://news.cjn.cn/cjht1/201310/W020131019668788168194.jpg');">
-
 	<form name="form2" action="${pageContext.request.contextPath }/UserServlet?method=login" method="post" >
 		<div style="height:200px"></div>
-		
+		<div style="text-align:center;color:#F00">${requestScope.message}</div>
 		<table align="center" width="400px" bgcolor="white" >
 			<tr>
 				<th>用户名</th>
 			<td align="center">
 				<input type="text" name="username"/>
-				${requestScope.message}
 			</td>
 		</tr>
 			
