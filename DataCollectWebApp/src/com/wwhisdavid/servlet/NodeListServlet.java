@@ -36,6 +36,11 @@ public class NodeListServlet extends HttpServlet {
 		try {
 			String currentPage = request.getParameter("currentPage");
 			String mode = request.getParameter("mode");
+			if (mode == null || "".equals(mode)) {
+				mode = "nomal";
+			}
+			String child = request.getParameter("table");
+			System.out.println(child+"------------");
 			if (currentPage == null || "".equals(currentPage.trim())) {
 				currentPage = "1";
 			}
@@ -53,8 +58,8 @@ public class NodeListServlet extends HttpServlet {
 				uri = "/nodelist.jsp";
 			}
 		} catch(Exception exception) {
-			exception.printStackTrace();
 			uri = "/error/error.jsp";
+			throw new RuntimeException(exception);
 		}		
 		request.getRequestDispatcher(uri).forward(request, response);
 	}

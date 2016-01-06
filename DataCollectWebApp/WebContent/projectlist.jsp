@@ -8,7 +8,8 @@
 <title>项目列表</title>
 </head>
 <body>
-	<div><c:out value="${requestScope.loginName}"></c:out></div>
+	<c:out value="${requestScope.loginName}"></c:out>
+	<div style="height:10px">${requestScope.loginName}</div>
 	<table border="1" width="80%" align="center" cellpadding="5" cellspacing="0">
 		<tr>
 			<th>序号</th>
@@ -25,7 +26,7 @@
   						<td>${node.project_id }</td>
   						<td>${node.name }</td>
   						<td>${node.description }</td>
-  						<td></td>
+  						<td><a href="${pageContext.request.contextPath }/NodeListServlet?table=${node.child_table}">查看数据</a></td>
   					</tr>
 				</c:forEach>
 			</c:when>
@@ -39,10 +40,10 @@
   			<td colspan="5" align="center">
   				当前${requestScope.pageBean.currentPage }/${requestScope.pageBean.totalPage }页     &nbsp;&nbsp;
   				
-  				<a href="${pageContext.request.contextPath }/ProjectListServlet&currentPage=1">首页</a>
-  				<a href="${pageContext.request.contextPath }/ProjectListServlet&currentPage=${requestScope.pageBean.currentPage-1}">上一页 </a>
-  				<a href="${pageContext.request.contextPath }/ProjectListServlet&currentPage=${requestScope.pageBean.currentPage+1}">下一页 </a>
-  				<a href="${pageContext.request.contextPath }/ProjectListServlet&currentPage=${requestScope.pageBean.totalPage}">末页</a>
+  				<a href="${pageContext.request.contextPath }/ProjectListServlet?method=login&currentPage=1">首页</a>
+  				<a href="${pageContext.request.contextPath }/ProjectListServlet?method=login&currentPage=${requestScope.pageBean.currentPage-1}">上一页 </a>
+  				<a href="${pageContext.request.contextPath }/ProjectListServlet?method=login&currentPage=${requestScope.pageBean.currentPage+1}">下一页 </a>
+  				<a href="${pageContext.request.contextPath }/ProjectListServlet?method=login&currentPage=${requestScope.pageBean.totalPage}">末页</a>
   			</td>
   		</tr>
 	</table>

@@ -4,7 +4,8 @@ public class ProjectListEntity {
 	private int project_id;
 	private String name;
 	private String description;
-	private String chile_table;
+	private String child_table;
+	
 	public int getProject_id() {
 		return project_id;
 	}
@@ -23,10 +24,10 @@ public class ProjectListEntity {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public String getChile_table() {
-		return chile_table;
+	public String getChild_table() {
+		return child_table;
 	}
-	public void setChile_table(String chile_table) {
-		this.chile_table = chile_table;
+	public void setChild_table(String chile_table) {
+		this.child_table = chile_table;
 	}
 }
