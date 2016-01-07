@@ -1,6 +1,8 @@
 package com.wwhisdavid.client;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -8,6 +10,9 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.LineBasedFrameDecoder;
+import io.netty.handler.codec.string.StringDecoder;
 
 public class NettyClient {
 	public void connect(int port, String host) throws InterruptedException{
@@ -22,6 +27,9 @@ public class NettyClient {
 
 					@Override
 					protected void initChannel(SocketChannel ch) throws Exception {
+						ByteBuf delimiter = Unpooled.copiedBuffer("$".getBytes());
+						ch.pipeline().addLast(new DelimiterBasedFrameDecoder(1024, delimiter));
+						ch.pipeline().addLast(new StringDecoder());
 						ch.pipeline().addLast(new NettyClientHandle());
 					}
 				});
@@ -37,7 +45,7 @@ public class NettyClient {
 //		if (args != null && args.length > 0) {
 //			port = Integer.valueOf(args[0]);
 //		}
-//		for (int i = 0; i < 300; i++) {
+		for (int i = 0; i < 400; i++) {
 			new Thread(new Runnable() {
 				public void run() {
 					int port = 12345;
@@ -49,6 +57,6 @@ public class NettyClient {
 					}
 				}
 			}).start();
-//		}
+		}
 	}
 }
