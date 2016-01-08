@@ -11,8 +11,8 @@ public class NettyClientHandle extends ChannelHandlerAdapter {
 	private static final Logger logger = Logger.getLogger(NettyClientHandle.class.getName());
 	private final ByteBuf firstMessage;
 
-	public NettyClientHandle() {
-		byte[] req = "hello java$".getBytes();
+	public NettyClientHandle(String msg) {
+		byte[] req = msg.getBytes();
 		firstMessage = Unpooled.buffer(req.length);
 		firstMessage.writeBytes(req);
 	}

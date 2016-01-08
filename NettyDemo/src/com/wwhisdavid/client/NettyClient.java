@@ -1,5 +1,8 @@
 package com.wwhisdavid.client;
 
+import java.nio.Buffer;
+import java.util.Random;
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -15,7 +18,7 @@ import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 
 public class NettyClient {
-	public void connect(int port, String host) throws InterruptedException{
+	public void connect(int port, String host, String msg) throws InterruptedException{
 		// 配置客户端NIO线程组
 		EventLoopGroup group = new NioEventLoopGroup();
 		try {
@@ -30,7 +33,7 @@ public class NettyClient {
 						ByteBuf delimiter = Unpooled.copiedBuffer("$".getBytes());
 						ch.pipeline().addLast(new DelimiterBasedFrameDecoder(1024, delimiter));
 						ch.pipeline().addLast(new StringDecoder());
-						ch.pipeline().addLast(new NettyClientHandle());
+						ch.pipeline().addLast(new NettyClientHandle(msg));
 					}
 				});
 			ChannelFuture future = b.connect(host, port).sync();
@@ -45,13 +48,23 @@ public class NettyClient {
 //		if (args != null && args.length > 0) {
 //			port = Integer.valueOf(args[0]);
 //		}
-		for (int i = 0; i < 400; i++) {
+		for (int i = 1; i < 100; i++) {
 			new Thread(new Runnable() {
 				public void run() {
 					int port = 12345;
 					try {
-						new NettyClient().connect(port, "127.0.0.1");
-					} catch (InterruptedException e) {
+						Random r = new Random();
+						int j = r.nextInt(10000);
+						String temp1 = "1D0B4FAFED5F4E4E4612ECD54E3386E7#2&14444";
+						String temp3 = "&23.5&22&1&2&3$";
+						StringBuffer buffer = new StringBuffer();
+						buffer.append(temp1);
+						buffer.append(Integer.valueOf(j));
+						buffer.append(temp3);
+						
+//						System.out.println(buffer.toString());
+						new NettyClient().connect(port, "127.0.0.1", buffer.toString());
+					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}

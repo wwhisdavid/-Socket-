@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.wwhisdavid.dao.ANodeDao;
 import com.wwhisdavid.entity.ANodeEntity;
 import com.wwhisdavid.service.ANodeService;
+import com.wwhisdavid.service.NodeService;
 import com.wwhisdavid.service.impl.ANodeServiceImpl;
+import com.wwhisdavid.service.impl.NodeServiceImpl;
 import com.wwhisdavid.util.PageBean;
 
 /**
@@ -50,7 +52,8 @@ public class NodeListServlet extends HttpServlet {
 			PageBean<ANodeEntity> pb = new PageBean<ANodeEntity>();
 			pb.setCurrentPage(currPage);
 			
-			nodeService.getAll(pb);
+			NodeService nodeService2 = new NodeServiceImpl();
+			nodeService2.getAll(pb, "a_node");
 			request.setAttribute("pageBean", pb);
 			if (mode.equals("map")) {
 				uri = "/nodelistinmap.jsp";

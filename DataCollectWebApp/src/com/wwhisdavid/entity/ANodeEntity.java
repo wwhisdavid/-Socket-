@@ -3,7 +3,7 @@ package com.wwhisdavid.entity;
 /*
  * 快变节点实体 javabean
  */
-public class ANodeEntity {
+public class ANodeEntity extends NodeEntity{
 	private int node_id;
 	private String name;
 	private float logitude;
