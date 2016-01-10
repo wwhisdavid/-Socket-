@@ -9,7 +9,7 @@
 </head>
 <body>
 	
-	<div style="height:50px;text-align:right;">欢迎回来，<c:out value="${sessionScope.loginName}"/> &nbsp;&nbsp;<a href="#">退出登陆</a></div>
+	<div style="height:50px;text-align:right;">欢迎回来，<c:out value="${sessionScope.loginName}"/> &nbsp;&nbsp;<a href="${pageContext.request.contextPath }/UserServlet?method=logout">退出登陆</a></div>
 	<table border="1" width="80%" align="center" cellpadding="5" cellspacing="0">
 		<tr>
 			<th>序号</th>

@@ -50,8 +50,11 @@ public class EncodingFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest)req;
 		HttpServletResponse response = (HttpServletResponse)res;
 		// post
+		int index = request.getRequestURI().indexOf("ChartServlet");
 		request.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html;charset=UTF-8");
+		if (index < 0) {
+			response.setContentType("text/html;charset=UTF-8");
+		}
 		
 //		HttpServletRequest proxy = (HttpServletRequest)Proxy.newProxyInstance(request.getClass().getClassLoader(), new Class[]{HttpServletRequest.class}, new InvocationHandler() {
 //			

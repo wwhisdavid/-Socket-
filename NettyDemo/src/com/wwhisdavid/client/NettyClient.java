@@ -55,7 +55,7 @@ public class NettyClient {
 					try {
 						Random r = new Random();
 						int j = r.nextInt(10000);
-						String temp1 = "1D0B4FAFED5F4E4E4612ECD54E3386E7#2&14444";
+						String temp1 = "1D0B4FAFED5F4E4E4612ECD54E3386E7#1&14444";
 						String temp3 = "&23.5&22&1&2&3$";
 						StringBuffer buffer = new StringBuffer();
 						buffer.append(temp1);

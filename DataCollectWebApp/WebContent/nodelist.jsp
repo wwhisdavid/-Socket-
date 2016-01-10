@@ -8,7 +8,7 @@
 <title>节点列表</title>
 </head>
 <body>
-	<div style="height:50px;text-align:right;">您好，<c:out value="${sessionScope.loginName}"/> &nbsp;&nbsp;<a href="#">退出登陆</a></div>
+	<div style="height:50px;text-align:right;">您好，<c:out value="${sessionScope.loginName}"/>&nbsp;&nbsp;<a href="${pageContext.request.contextPath }/UserServlet?method=logout">退出登陆</a></div>
 	<table border="1" width="80%" align="center" cellpadding="5" cellspacing="0">
 		<tr>
 			<th>序号</th>
@@ -44,7 +44,7 @@
   				<a href="${pageContext.request.contextPath }/NodeListServlet?mode=nomal&currentPage=${requestScope.pageBean.currentPage+1}">下一页 </a>
   				<a href="${pageContext.request.contextPath }/NodeListServlet?mode=nomal&currentPage=${requestScope.pageBean.totalPage}">末页</a>
   				&nbsp;&nbsp;
-  				<a href="${pageContext.request.contextPath }/NodeListServlet?mode=map">地图模式</a>
+  				<a href="${pageContext.request.contextPath }/NodeListServlet?mode=map&table=${requestScope.table}">地图模式</a>
   			</td>
   		</tr>
 	</table>

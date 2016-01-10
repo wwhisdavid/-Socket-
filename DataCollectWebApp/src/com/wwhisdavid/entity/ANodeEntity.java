@@ -8,6 +8,7 @@ public class ANodeEntity extends NodeEntity{
 	private String name;
 	private float logitude;
 	private float latitude;
+	private String child_table;
 	
 	public int getNode_id() {
 		return node_id;
@@ -32,6 +33,12 @@ public class ANodeEntity extends NodeEntity{
 	}
 	public void setLatitude(float latitude) {
 		this.latitude = latitude;
+	}
+	public String getChild_table() {
+		return child_table;
+	}
+	public void setChild_table(String child_table) {
+		this.child_table = child_table;
 	}
 	
 }

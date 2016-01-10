@@ -1,6 +1,8 @@
 package com.wwhisdavid.servlet;
 
 import java.io.IOException;
+import java.util.Enumeration;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -36,8 +38,14 @@ public class NodeListServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
+			Enumeration<?> params = request.getParameterNames();
+			if (!params.hasMoreElements()) {
+				request.getRequestDispatcher("/ProjectListServlet").forward(request, response);
+				return;
+			}
 			String currentPage = request.getParameter("currentPage");
 			String mode = request.getParameter("mode");
+			
 			if (mode == null || "".equals(mode)) {
 				mode = "nomal";
 			}
@@ -49,12 +57,15 @@ public class NodeListServlet extends HttpServlet {
 			// 得到页数
 			int currPage = Integer.parseInt(currentPage);
 			
-			PageBean<ANodeEntity> pb = new PageBean<ANodeEntity>();
+			PageBean<?> pb = new PageBean();
 			pb.setCurrentPage(currPage);
 			
 			NodeService nodeService2 = new NodeServiceImpl();
-			nodeService2.getAll(pb, "a_node");
+			nodeService2.getAll(pb, child);
+//			System.out.println(mode +":"+pb.getPageData().toString());
 			request.setAttribute("pageBean", pb);
+			request.setAttribute("table", child);
+			System.out.println("table:"+request.getParameter("table"));
 			if (mode.equals("map")) {
 				uri = "/nodelistinmap.jsp";
 			}else{

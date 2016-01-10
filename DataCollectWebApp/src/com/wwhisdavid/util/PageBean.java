@@ -8,6 +8,7 @@ public class PageBean<T> {
 	private int totalCount;
 	private int totalPage;
 	private List<T> pageData;
+	private List<T> totalData;
 	
 	
 	public int getCurrentPage() {
@@ -44,6 +45,12 @@ public class PageBean<T> {
 	}
 	public void setPageData(List<T> pageData) {
 		this.pageData = pageData;
+	}
+	public List<T> getTotalData() {
+		return totalData;
+	}
+	public void setTotalData(List<T> totalData) {
+		this.totalData = totalData;
 	}
 	
 	

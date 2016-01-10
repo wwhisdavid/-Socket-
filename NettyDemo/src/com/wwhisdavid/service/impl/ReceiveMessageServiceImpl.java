@@ -1,9 +1,8 @@
 package com.wwhisdavid.service.impl;
 
-import javax.print.attribute.DocAttribute;
-
 import com.wwhisdavid.dao.ReceiveMessageDao;
 import com.wwhisdavid.dao.impl.ReceiveANodeMessageDaoImpl;
+import com.wwhisdavid.exception.MessageErrorException;
 import com.wwhisdavid.service.ReceiveMessageService;
 
 public class ReceiveMessageServiceImpl implements ReceiveMessageService {
@@ -15,7 +14,7 @@ public class ReceiveMessageServiceImpl implements ReceiveMessageService {
 	}
 
 	@Override
-	public void insert2mysql(String msg) {
+	public void insert2mysql(String msg) throws MessageErrorException {
 		
 		// 做校验和分配具体dao
 		String[] msgs = msg.split("#"); 

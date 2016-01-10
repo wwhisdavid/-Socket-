@@ -12,7 +12,7 @@
 </head>
 <body>
 
-	<div style="height:50px;text-align:right;">您好，<c:out value="${sessionScope.loginName}"/> &nbsp;&nbsp;<a href="#">退出登陆</a></div>
+	<div style="height:50px;text-align:right;">您好，<c:out value="${sessionScope.loginName}"/> &nbsp;&nbsp;<a href="${pageContext.request.contextPath }/UserServlet?method=logout">退出登陆</a></div>
 	<div class="demo_main">
 		<fieldset class="demo_title">百度地图API显示多个标注点带提示的代码</fieldset>
 		<fieldset class="demo_content">
@@ -150,7 +150,8 @@
     		this.openInfoWindow(info[0]);
 			});
         marker[0].addEventListener("click", function() {
-        	window.location.href = "${pageContext.request.contextPath }"+'/index.jsp';
+        	var url = '${pageContext.request.contextPath }/NodeDetailServlet?node_id=' + array[0].node_id;
+        	window.location.href = url;
 			});
         marker[1].addEventListener("mouseover", function() {
     		this.openInfoWindow(info[1]);

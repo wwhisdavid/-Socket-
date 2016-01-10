@@ -52,7 +52,14 @@ public class UserServlet extends HttpServlet {
 				// 跳转到需要到的界面
 				request.getRequestDispatcher("/ProjectListServlet").forward(request, response);
 			}
+		} else if ("logout".equals(method)) {
+			HttpSession session = request.getSession(false);
+			if (session != null) {
+				session.removeAttribute("loginName");
+			}
+			response.sendRedirect("login.jsp");
 		}
+		
 	}
 
 	/**
