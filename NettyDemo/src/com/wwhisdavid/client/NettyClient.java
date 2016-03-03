@@ -48,7 +48,7 @@ public class NettyClient {
 //		if (args != null && args.length > 0) {
 //			port = Integer.valueOf(args[0]);
 //		}
-		for (int i = 1; i < 200; i++) {
+		for (int i = 1; i < 100; i++) {
 			new Thread(new Runnable() {
 				public void run() {
 					int port = 12345;

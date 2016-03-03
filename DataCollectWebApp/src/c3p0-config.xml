@@ -5,10 +5,9 @@
 	<property name="driverClass">com.mysql.jdbc.Driver</property>
 	<property name="user">root</property>
 	<property name="password">141016</property>
-	<property name="minPoolSize">3</property>
-	<property name="initialPoolSize">10</property>
-	<property name="maxPoolSize">40</property>
-	<property name="maxIdleTime">300</property>
+	<property name="initialPoolSize">5</property>
+	<property name="maxPoolSize">8</property>
+	<property name="maxIdleTime">3000</property>
     <!--
     <user-overrides user="swaldman">
       <property name="debugUnreturnedConnectionStackTraces">true</property>

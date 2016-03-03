@@ -3,7 +3,6 @@ package com.wwhisdavid.chart;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.IOException;
-import java.util.List;
 import java.util.Random;
 
 import javax.servlet.ServletException;
@@ -26,10 +25,6 @@ import org.jfree.chart.title.TextTitle;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.RectangleInsets;
 
-import com.sun.javafx.collections.MappingChange.Map;
-import com.wwhisdavid.util.DateUtil;
-import com.wwhisdavid.util.PageBean;
-
 /**
  * Servlet implementation class ChartServlet
  */
@@ -51,23 +46,16 @@ public class ChartServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		// 获取数据
-		PageBean pb = (PageBean)request.getSession().getAttribute("chartData");
-		System.out.println(pb.getPageData().get(0));
 		
-		// 1. 当前时间 (默认时间范围)
+		// 1. 当前时间
 		long currentTime = System.currentTimeMillis();
 		long fromTime = System.currentTimeMillis() - 24*60*60*1000; // 前24小时
 		long toTime = System.currentTimeMillis() + 24*60*60*1000;  // 后24小时
-		String cString = currentTime + "";
-		String fString = fromTime + "";
-		String currentTimeStr = DateUtil.unixTime2StringSecond(cString);
-		String fromTimeStr = DateUtil.unixTime2StringSecond(fString);
-		System.out.println("+++++" + request.getSession().getAttribute("node_name"));
 		
-		List list = pb.getTotalData();
+		
 		
 		JFreeChart chart = this.creatChart();
-		ChartUtilities.writeChartAsJPEG(response.getOutputStream(), chart, 1000, 500);
+		ChartUtilities.writeChartAsJPEG(response.getOutputStream(), chart, 500, 500);
 	}
 
 	/**
@@ -77,11 +65,8 @@ public class ChartServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-	
-	
 	private JFreeChart creatChart(){
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		
 		 String[] time = new String[15];
         String[] timeValue = { "6-1日", "6-2日", "6-3日", "6-4日", "6-5日", "6-6日",
                       "6-7日", "6-8日", "6-9日", "6-10日", "6-11日", "6-12日", "6-13日",

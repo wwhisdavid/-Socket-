@@ -150,7 +150,7 @@
     		this.openInfoWindow(info[0]);
 			});
         marker[0].addEventListener("click", function() {
-        	var url = '${pageContext.request.contextPath }/NodeDetailServlet?node_id=' + array[0].node_id + '&node_name=' + array[0].name;
+        	var url = '${pageContext.request.contextPath }/NodeDetailServlet?node_id=' + array[0].node_id;
         	window.location.href = url;
 			});
         marker[1].addEventListener("mouseover", function() {

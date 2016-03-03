@@ -7,7 +7,6 @@ public class QueryNodeDetailEntity {
 	private long fromTime;
 	private long toTime;
 	private ArrayList<String> params;
-	private String node_name;
 	
 	public ArrayList<String> getParams() {
 		return params;
@@ -32,12 +31,6 @@ public class QueryNodeDetailEntity {
 	}
 	public void setToTime(long toTime) {
 		this.toTime = toTime;
-	}
-	public String getNode_name() {
-		return node_name;
-	}
-	public void setNode_name(String node_name) {
-		this.node_name = node_name;
 	}
 }
 
