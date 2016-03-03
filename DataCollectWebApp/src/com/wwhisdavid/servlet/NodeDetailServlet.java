@@ -48,6 +48,8 @@ public class NodeDetailServlet extends HttpServlet {
 				String string = params.nextElement();
 				if ("node_id".equals(string)) {
 					queryNodeDetailEntity.setNode_id(request.getParameter(string));
+				} else if ("node_name".equals(string)) {
+					queryNodeDetailEntity.setNode_name(request.getParameter(string));
 				} else if ("fromTime".equals(string)) {
 					queryNodeDetailEntity.setFromTime(Long.valueOf(request.getParameter(string)));
 				} else if ("toTime".equals(string)) {
@@ -79,7 +81,11 @@ public class NodeDetailServlet extends HttpServlet {
 			System.out.println("detail:"+pb.getPageData().get(0).toString());
 			
 			request.setAttribute("pageBean", pb);
+			request.getSession().setAttribute("chartData", pb);
+			request.getSession().setAttribute("node_name", queryNodeDetailEntity.getNode_name());
 			request.setAttribute("node_id", queryNodeDetailEntity.getNode_id());
+			request.setAttribute("node_name", queryNodeDetailEntity.getNode_name());
+			
 			uri = "chartdisplay.jsp";
 		} catch (Exception e) {
 			e.printStackTrace();
