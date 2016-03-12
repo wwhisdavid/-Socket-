@@ -45,16 +45,17 @@
 </head>
 <body>
 	<%-- <c:out value="${requestScope.node_name}"></c:out> --%>
-	<form action="${pageContext.request.contextPath }/FilterDataServlet" method="get"  onsubmit="return checkAll()"> <!--如果表单提交时候触发的方法返回是false,那么该表单不允许提交，如果返回的是true允许提交 -->
+	<%--onsubmit="return checkAll()" --%>
+	<form action="${pageContext.request.contextPath }/FilterDataServlet" method="get"  > <!--如果表单提交时候触发的方法返回是false,那么该表单不允许提交，如果返回的是true允许提交 -->
 			<table border="1px" width="50%" align="center" cellspacing="0px" cellpadding="3px">
 				
 	
 				
 				<tr>
 					<td>处理方式</td><td>
-						<input type="radio" checked="ture" name="download" id="download" value="download"/>
+						<input type="radio" checked="ture" name="type" id="type" value="download"/>
 					下载数据文件
-						<input type="radio" name="transfer" value="transfer"/>
+						<input type="radio" name="type" value="transfer"/>
 					传输至客户端</td>
 					<td>
 						<input type="hidden" name="node_id" value="${requestScope.node_id}" />
@@ -77,13 +78,13 @@
 				</tr>
 				<tr>
 					<td>查询时间（起始）</td><td>
-					<select name="year" id="year">
+					<select name="year1" id="year">
 						<option value=""> 请选择</option>
 						<option value="2013"> 2013 </option>
 						<option value="2014"> 2014 </option>
 						<option value="2015"> 2015 </option>
 					</select> 年
-					<select name="month" id="month">
+					<select name="month1" id="month">
 						<option value=""> 请选择</option>
 						<option value="1"> 1 </option>
 						<option value="2"> 2 </option>
@@ -105,13 +106,13 @@
 				</tr>
 				<tr>
 					<td>查询时间（终止）</td><td>
-					<select name="year" id="year">
+					<select name="year2" id="year">
 						<option value=""> 请选择</option>
 						<option value="2013"> 2013 </option>
 						<option value="2014"> 2014 </option>
 						<option value="2015"> 2015 </option>
 					</select> 年
-					<select name="month" id="month">
+					<select name="month2" id="month">
 						<option value=""> 请选择</option>
 						<option value="1"> 1 </option>
 						<option value="2"> 2 </option>
