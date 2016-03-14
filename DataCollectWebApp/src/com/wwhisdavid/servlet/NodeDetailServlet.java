@@ -41,6 +41,8 @@ public class NodeDetailServlet extends HttpServlet {
 		try {
 			QueryNodeDetailEntity queryNodeDetailEntity = new QueryNodeDetailEntity();
 			int currentPage = 1;
+			queryNodeDetailEntity.setFromTime(0);
+			queryNodeDetailEntity.setToTime(0);
 			
 			// 获取筛选数据
 			Enumeration<String> params = request.getParameterNames();

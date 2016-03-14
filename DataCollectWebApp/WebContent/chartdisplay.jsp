@@ -60,6 +60,9 @@
 					<td>
 						<input type="hidden" name="node_id" value="${requestScope.node_id}" />
 					</td>
+					<td>
+						<input type="hidden" name="node_name" value="${requestScope.node_name}" />
+					</td>
 				</tr>
 				<tr>
 					<td>数据字段</td><td>

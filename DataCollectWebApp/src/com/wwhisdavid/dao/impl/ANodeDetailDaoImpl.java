@@ -21,8 +21,11 @@ public class ANodeDetailDaoImpl implements NodeDetailDao {
 	@Override
 	public void getAll(PageBean pb, QueryNodeDetailEntity queryNodeDetailEntity) {
 		// test
-		queryNodeDetailEntity.setFromTime(1);
-		queryNodeDetailEntity.setToTime(2000000000);
+		if (queryNodeDetailEntity.getFromTime() == 0 || queryNodeDetailEntity.getToTime() == 0) {
+			queryNodeDetailEntity.setFromTime(1);
+			queryNodeDetailEntity.setToTime(2000000000);
+		}
+		
 		
 		int totalCount = this.getTotalCount(queryNodeDetailEntity);
 		pb.setTotalCount(totalCount);

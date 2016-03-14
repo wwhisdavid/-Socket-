@@ -1,5 +1,6 @@
 package com.wwhisdavid.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -17,6 +18,12 @@ public class DateUtil {
 		SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd-HH:mm:ss");
 		String date = sdf.format(new Date(Long.valueOf(timestamp)));
 		return date;
+	}
+	
+	public static long formateTime2unix(String formate) throws ParseException{
+		SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd-HH:mm:ss");
+		Date date = sdf.parse(formate);
+		return date.getTime()/1000;
 	}
 }
 
