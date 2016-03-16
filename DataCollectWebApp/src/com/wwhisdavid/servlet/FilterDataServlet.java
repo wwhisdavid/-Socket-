@@ -122,11 +122,24 @@ public class FilterDataServlet extends HttpServlet {
 		for (ANodeDetailEntity nodeDetailEntity : pb.getTotalData()) {
 			Element nodeElem = rootElem.addElement("record");
 			nodeElem.addAttribute("record_time", nodeDetailEntity.getRecord_time() + "");
-			nodeElem.addElement("humidity").setText(nodeDetailEntity.getHumidity() + "");
-			nodeElem.addElement("temperature").setText(nodeDetailEntity.getTemperature() + "");
-			nodeElem.addElement("stress-x").setText(nodeDetailEntity.getStress_x() + "");
-			nodeElem.addElement("stress-y").setText(nodeDetailEntity.getStress_y() + "");
-			nodeElem.addElement("stress-z").setText(nodeDetailEntity.getStress_z() + "");
+			
+			for (String string : queryNodeDetailEntity.getParams()) {
+				if (string.equals("humidity")) {
+					nodeElem.addElement("humidity").setText(nodeDetailEntity.getHumidity() + "");
+				}
+				if (string.equals("temperature")) {
+					nodeElem.addElement("temperature").setText(nodeDetailEntity.getTemperature() + "");
+				}
+				if (string.equals("stress-x")) {
+					nodeElem.addElement("stress-x").setText(nodeDetailEntity.getStress_x() + "");
+				}
+				if (string.equals("stress-y")) {
+					nodeElem.addElement("stress-y").setText(nodeDetailEntity.getStress_y() + "");
+				}
+				if (string.equals("stress-z")) {
+					nodeElem.addElement("stress-z").setText(nodeDetailEntity.getStress_z() + "");
+				}
+			}
 		} 
 			
 		FileOutputStream out = new FileOutputStream(download);
@@ -136,8 +149,9 @@ public class FilterDataServlet extends HttpServlet {
 		
 		writer.write(document);
 		writer.close();
-		
-		new ServerThread(socket, download).run();	
+		Boolean isReceive = false;
+		new ServerThread(socket, download, isReceive).run();	
+		response.getWriter().write("send ok");
 	}
 
 	/**

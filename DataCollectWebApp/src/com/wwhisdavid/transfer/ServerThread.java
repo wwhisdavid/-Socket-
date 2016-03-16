@@ -17,11 +17,12 @@ public class ServerThread implements Runnable {
 	private Socket s;
 	private File data;
 	private StringBuffer stringBuffer;
+	private Boolean sendOK;
 
-	public ServerThread(Socket socket, File data) {
+	public ServerThread(Socket socket, File data, Boolean isReceive) {
 		// TODO Auto-generated constructor stub
 		this.s = socket;
-
+		this.sendOK = isReceive;
 		this.data = data;
 	}
 
@@ -34,11 +35,12 @@ public class ServerThread implements Runnable {
 
 			String line = null;
 			stringBuffer = new StringBuffer();
+			stringBuffer.append("whu&" + data.getName() + "\n");
 			while ((line = bufferedReader.readLine()) != null) {
-				stringBuffer.append(line);
+				stringBuffer.append(line + "\n");
 			}
 			bufferedReader.close();
-			
+		
 			bw.write(stringBuffer.toString());
 			bw.flush();
 		} catch (IOException e) {
@@ -62,6 +64,9 @@ public class ServerThread implements Runnable {
 		try {
 			String receive = br.readLine();
 			System.out.println(receive);
+			if (receive.equals("receive!")) {
+				sendOK = true;
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
