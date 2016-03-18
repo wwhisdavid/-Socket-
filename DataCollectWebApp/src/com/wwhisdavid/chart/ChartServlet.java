@@ -162,7 +162,7 @@ public class ChartServlet extends HttpServlet {
        // 设置距离图片右端距离
        categoryAxis.setUpperMargin(0.0);
 		
-    // 获得renderer 注意这里是下嗍造型到lineandshaperenderer！！
+    // 获得renderer 注意这里是下造型到lineandshaperenderer！！
        LineAndShapeRenderer lineandshaperenderer = (LineAndShapeRenderer)categoryPlot.getRenderer();
        lineandshaperenderer.setBaseShapesVisible(true);
        // series 点（即数据点）可见

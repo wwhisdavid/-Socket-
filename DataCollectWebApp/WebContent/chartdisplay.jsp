@@ -83,6 +83,7 @@
 					<td>查询时间（起始）</td><td>
 					<select name="year1" id="year">
 						<option value=""> 请选择</option>
+						<option value="1970"> 1970 </option>
 						<option value="2013"> 2013 </option>
 						<option value="2014"> 2014 </option>
 						<option value="2015"> 2015 </option>

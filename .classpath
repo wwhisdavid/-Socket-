@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="DataCollectWebApp/src"/>
+	<classpathentry kind="src" path="NettyDemo/src"/>
+	<classpathentry kind="src" path="SocketDemo/src"/>
+	<classpathentry kind="src" path="SocketNIODemo/src"/>
+	<classpathentry kind="lib" path="DataCollectWebApp/WebContent/WEB-INF/lib/c3p0-0.9.1.2.jar"/>
+	<classpathentry kind="lib" path="DataCollectWebApp/WebContent/WEB-INF/lib/commons-beanutils-1.8.3.jar"/>
+	<classpathentry kind="lib" path="DataCollectWebApp/WebContent/WEB-INF/lib/commons-dbutils-1.6.jar"/>
+	<classpathentry kind="lib" path="DataCollectWebApp/WebContent/WEB-INF/lib/commons-logging-1.1.3.jar"/>
+	<classpathentry kind="lib" path="DataCollectWebApp/WebContent/WEB-INF/lib/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="DataCollectWebApp/WebContent/WEB-INF/lib/jcommon-1.0.23.jar"/>
+	<classpathentry kind="lib" path="DataCollectWebApp/WebContent/WEB-INF/lib/jfreechart-1.0.19.jar"/>
+	<classpathentry kind="lib" path="DataCollectWebApp/WebContent/WEB-INF/lib/jstl-1.2.jar"/>
+	<classpathentry kind="lib" path="DataCollectWebApp/WebContent/WEB-INF/lib/mysql-connector-java-5.1.7-bin.jar"/>
+	<classpathentry kind="lib" path="DataCollectWebApp/WebContent/WEB-INF/lib/standard.jar"/>
+	<classpathentry kind="lib" path="NettyDemo/lib/c3p0-0.9.1.2.jar"/>
+	<classpathentry kind="lib" path="NettyDemo/lib/commons-dbutils-1.6.jar"/>
+	<classpathentry kind="lib" path="NettyDemo/lib/commons-logging-1.1.3.jar"/>
+	<classpathentry kind="lib" path="NettyDemo/lib/mysql-connector-java-5.1.7-bin.jar"/>
+	<classpathentry kind="lib" path="NettyDemo/lib/netty-all-5.0.0.Alpha2.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="DataCollectWebApp/build/classes"/>
+</classpath>

@@ -18,6 +18,7 @@ import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 
 public class NettyClient {
+	private static int i = 0;
 	public void connect(int port, String host, String msg) throws InterruptedException{
 		// 配置客户端NIO线程组
 		EventLoopGroup group = new NioEventLoopGroup();
@@ -48,20 +49,22 @@ public class NettyClient {
 //		if (args != null && args.length > 0) {
 //			port = Integer.valueOf(args[0]);
 //		}
-		for (int i = 1; i < 200; i++) {
+		
+		for (; i < 23; ) {
 			new Thread(new Runnable() {
+				
 				public void run() {
 					int port = 12345;
 					try {
-						Random r = new Random();
-						int j = r.nextInt(10000);
-						String temp1 = "1D0B4FAFED5F4E4E4612ECD54E3386E7#1&14444";
+//						Random r = new Random();
+//						int j = r.nextInt(10000);
+						int startTime = 3600 * i + 737827200;
+						String temp1 = "1D0B4FAFED5F4E4E4612ECD54E3386E7#1&" + startTime;
 						String temp3 = "&23.5&22&1&2&3$";
 						StringBuffer buffer = new StringBuffer();
 						buffer.append(temp1);
-						buffer.append(Integer.valueOf(j));
 						buffer.append(temp3);
-						
+						i++;
 //						System.out.println(buffer.toString());
 						new NettyClient().connect(port, "127.0.0.1", buffer.toString());
 					} catch (Exception e) {
