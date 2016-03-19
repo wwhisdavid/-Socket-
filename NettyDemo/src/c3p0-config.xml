@@ -5,9 +5,12 @@
 	<property name="driverClass">com.mysql.jdbc.Driver</property>
 	<property name="user">root</property>
 	<property name="password">141016</property>
-	<property name="initialPoolSize">5</property>
-	<property name="maxPoolSize">50</property>
-	<property name="maxIdleTime">3000</property>
+	<property name="initialPoolSize">100</property>
+	<property name="maxPoolSize">5000</property>
+	<property name="maxIdleTime">10</property>
+	<!--当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。Default: 3 --> 
+	<property name="acquireIncrement">10</property> 
+	
     <!--
     <user-overrides user="swaldman">
       <property name="debugUnreturnedConnectionStackTraces">true</property>

@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -41,6 +42,7 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.jfree.chart.*;
 import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.entity.ChartEntity;
 import org.jfree.chart.entity.XYItemEntity;
 import org.jfree.chart.labels.ItemLabelAnchor;
@@ -48,7 +50,9 @@ import org.jfree.chart.labels.ItemLabelPosition;
 import org.jfree.chart.labels.StandardXYItemLabelGenerator;
 import org.jfree.chart.labels.StandardXYToolTipGenerator;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.renderer.xy.XYSplineRenderer;
 import org.jfree.data.time.*;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.ui.*;
@@ -62,6 +66,8 @@ public class MainViewController extends ApplicationFrame {
 	private static Set<String> params = new HashSet<>();
 	ChartPanel chartpanel = null;
 	private JTextArea jTextArea = null;
+	private JButton jButtonForBoldLine = null;
+	private JButton jButtonForSpline = null;
 	
 	public MainViewController(String title) {
 		super(title);
@@ -88,7 +94,15 @@ public class MainViewController extends ApplicationFrame {
 				List<ANodeDetailEntity> list = openXMLFile(selectedFile);
 
 				System.out.println(params.toString());
-				resetPanel(list);
+				try {
+					resetPanel(list, XYLineAndShapeRenderer.class);
+				} catch (InstantiationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IllegalAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 
@@ -116,31 +130,19 @@ public class MainViewController extends ApplicationFrame {
 
 	}
 
-	private static JFreeChart createChart(XYDataset xydataset) {
+	private static <T extends XYItemRenderer>JFreeChart createChart(XYDataset xydataset, Class<T> clazz) throws InstantiationException, IllegalAccessException {
 		JFreeChart jfreechart = ChartFactory.createTimeSeriesChart("水库监测", "记录日期", "温度/湿度/压强", xydataset, true, true,
 				true);
 		jfreechart.setBackgroundPaint(Color.white);
 		XYPlot xyplot = (XYPlot) jfreechart.getPlot();
+		
 		xyplot.setBackgroundPaint(Color.lightGray);
 		xyplot.setDomainGridlinePaint(Color.white);
 		xyplot.setRangeGridlinePaint(Color.white);
 		xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
 		xyplot.setDomainCrosshairVisible(true);
 		xyplot.setRangeCrosshairVisible(true);
-		org.jfree.chart.renderer.xy.XYItemRenderer xyitemrenderer = xyplot.getRenderer();
-
-		if (xyitemrenderer instanceof XYLineAndShapeRenderer) {
-			XYLineAndShapeRenderer xylineandshaperenderer = (XYLineAndShapeRenderer) xyitemrenderer;
-			xylineandshaperenderer.setBaseShapesVisible(true);
-			xylineandshaperenderer.setBaseShapesFilled(true);
-
-			xylineandshaperenderer.setBaseItemLabelsVisible(true);
-			xylineandshaperenderer.setBasePositiveItemLabelPosition(
-					new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
-			xylineandshaperenderer.setBaseItemLabelGenerator(new StandardXYItemLabelGenerator());
-			xylineandshaperenderer.setBaseItemLabelFont(new Font("Dialog", 1, 8));
-			xyplot.setRenderer(xylineandshaperenderer);
-		}
+		resetRender(clazz, xyplot);
 		DateAxis dateaxis = (DateAxis) xyplot.getDomainAxis();
 		dateaxis.setDateFormatOverride(new SimpleDateFormat("yyyy-MM-dd:HH"));
 		return jfreechart;
@@ -276,10 +278,32 @@ public class MainViewController extends ApplicationFrame {
 		}
 		return recordList;
 	}
+	
+	private static <T extends XYItemRenderer>void resetRender(Class<T> clazz, XYPlot xyplot) throws InstantiationException, IllegalAccessException{
+		XYItemRenderer xyitemrenderer = clazz.newInstance();
+		if (xyitemrenderer instanceof XYLineAndShapeRenderer) {
+			XYLineAndShapeRenderer xylineandshaperenderer = (XYLineAndShapeRenderer) xyitemrenderer;
+			xylineandshaperenderer.setBaseShapesVisible(true);
+			xylineandshaperenderer.setBaseShapesFilled(true);
 
-	private void resetPanel(List<ANodeDetailEntity> list) {
+			xylineandshaperenderer.setBaseItemLabelsVisible(true);
+			xylineandshaperenderer.setBasePositiveItemLabelPosition(
+					new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
+			xylineandshaperenderer.setBaseItemLabelGenerator(new StandardXYItemLabelGenerator());
+			xylineandshaperenderer.setBaseItemLabelFont(new Font("Dialog", 1, 8));
+			xyplot.setRenderer(xylineandshaperenderer);
+		}
+		else if (xyitemrenderer instanceof XYSplineRenderer) {
+			XYSplineRenderer renderer = (XYSplineRenderer)xyitemrenderer;
+			renderer.setBaseShapesVisible(false); //绘制的线条上不显示图例，如果显示的话，会使图片变得很丑陋
+			renderer.setPrecision(5); //设置精度，大概意思是在源数据两个点之间插入5个点以拟合出一条平滑曲线
+			xyplot.setRenderer(renderer);
+		}
+	}
+	
+	private <T extends XYItemRenderer> void resetPanel(List<ANodeDetailEntity> list, Class<T> clazz) throws InstantiationException, IllegalAccessException {
 		XYDataset xydataset = createDataset(list);
-		JFreeChart jfreechart = createChart(xydataset);
+		JFreeChart jfreechart = createChart(xydataset, clazz);
 		ChartPanel chartpanel = new ChartPanel(jfreechart, false);
 		chartpanel.setPreferredSize(new Dimension(500, 270));
 		chartpanel.setMouseZoomable(false);
@@ -322,8 +346,51 @@ public class MainViewController extends ApplicationFrame {
 		jTextArea.setPreferredSize(new Dimension(180, 15));
 		jTextArea.setBackground(Color.gray);
 		jTextArea.setBounds(0, 0, 180, 15);
+		
+		jButtonForBoldLine = new JButton("显示折线图");
+		jButtonForBoldLine.setBounds(0, 15, 90, 15);
+		jButtonForBoldLine.setFont(new Font("Default", Font.PLAIN, 10));
+		jButtonForBoldLine.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					resetPanel(list, XYLineAndShapeRenderer.class);
+				} catch (InstantiationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IllegalAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}				
+			}
+		});
+		
+		jButtonForSpline = new JButton("显示曲线图");
+		jButtonForSpline.setBounds(95, 15, 90, 15);
+		jButtonForSpline.setFont(new Font("Default", Font.PLAIN, 10));
+		jButtonForSpline.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					resetPanel(list, XYSplineRenderer.class);
+				} catch (InstantiationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IllegalAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		
 		chartpanel.setLayout(null);
 		chartpanel.add(jTextArea);
+		chartpanel.add(jButtonForBoldLine);
+		chartpanel.add(jButtonForSpline);
+		
 		setContentPane(chartpanel);
 		revalidate();
 	}
