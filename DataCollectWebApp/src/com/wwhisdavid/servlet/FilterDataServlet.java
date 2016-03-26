@@ -106,7 +106,7 @@ public class FilterDataServlet extends HttpServlet {
 		pb.setCurrentPage(1);
 		
 		service.getAll(pb, queryNodeDetailEntity);
-		String xmlName = request.getSession().getAttribute("loginName") + "_" + unixFromTime +"_" + unixToTime + ".xml";
+		String xmlName = request.getSession().getAttribute("loginName") + "_" + node_id + "_" + unixFromTime +"_" + unixToTime + ".xml";
 		
 		String path = request.getServletContext().getRealPath("/") + xmlName;
 		System.out.println(path);

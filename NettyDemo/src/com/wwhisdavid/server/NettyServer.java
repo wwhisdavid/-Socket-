@@ -54,8 +54,10 @@ public class NettyServer {
 	
 	public static void main(String[] args) {
 		int port = 12345;
+		
 		if (args != null && args.length>0) {
 			try {
+				System.out.println(args[0]);
 				port = Integer.valueOf(args[0]);
 			} catch (Exception e) {
 				

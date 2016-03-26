@@ -1,4 +1,4 @@
-package com.wwhisdavid.client;
+package com.wwhisdavid.send;
 
 import java.nio.Buffer;
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class NettyClient {
 						buffer.append(temp3);
 
 						// System.out.println(buffer.toString());
-						new NettyClient().connect(port, "127.0.0.1", buffer.toString());
+						new NettyClient().connect(port, "127.0.0.1", "hello java");
 						
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
@@ -77,26 +77,14 @@ public class NettyClient {
 			}).start();
 
 		}
-
+		
 	}
-
-	public static void main(String[] args) throws InterruptedException {
-
-		// if (args != null && args.length > 0) {
-		// port = Integer.valueOf(args[0]);
-		// }
-
-		send("hello java!");
-//		testConcurrent();
-	}
-	
 	public static void send(String msg) throws InterruptedException {
 		new Thread(new Runnable() {
 			
-			
+			int port = 12345;
 			@Override
 			public void run() {
-				int port = 12345;
 				// TODO Auto-generated method stub
 				try {
 					new NettyClient().connect(port, "127.0.0.1", msg);
