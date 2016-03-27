@@ -116,19 +116,20 @@ public class MainViewController extends ApplicationFrame {
 									+"&"
 									+user
 									+"&"
-									+command;
-//					try {
-//						NettyClient.send(command);
-//					} catch (InterruptedException e1) {
-//						// TODO Auto-generated catch block
-//						e1.printStackTrace();
-//					}
+									+command
+									+"$";
 					try {
-						NettyClient.testConcurrent();
+						NettyClient.send(message);
 					} catch (InterruptedException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+//					try {
+//						NettyClient.testConcurrent();
+//					} catch (InterruptedException e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
 				}
 
 			}

@@ -1,10 +1,5 @@
 package com.wwhisdavid.client;
 
-import java.nio.Buffer;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.concurrent.locks.Lock;
-
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -16,12 +11,10 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
-import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 
 public class NettyClient {
 	private static int i = 0;
-	private static int reader = 0;
 
 	public void connect(int port, String host, String msg) throws InterruptedException {
 		// 配置客户端NIO线程组
@@ -86,8 +79,8 @@ public class NettyClient {
 		// port = Integer.valueOf(args[0]);
 		// }
 
-		send("hello java!");
-//		testConcurrent();
+//		send("hello java!");
+		testConcurrent();
 	}
 	
 	public static void send(String msg) throws InterruptedException {
