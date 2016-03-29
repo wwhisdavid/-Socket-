@@ -80,7 +80,7 @@ public class NodeDetailServlet extends HttpServlet {
 		
 			service.getAll(pb, queryNodeDetailEntity);
 			
-			System.out.println("detail:"+pb.getPageData().get(0).toString());
+//			System.out.println("detail:"+pb.getPageData().get(0).toString());
 			
 			request.setAttribute("pageBean", pb);
 			request.getSession().setAttribute("chartData", pb);

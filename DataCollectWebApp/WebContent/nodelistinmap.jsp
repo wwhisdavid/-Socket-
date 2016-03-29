@@ -14,7 +14,7 @@
 
 	<div style="height:50px;text-align:right;">您好，<c:out value="${sessionScope.loginName}"/> &nbsp;&nbsp;<a href="${pageContext.request.contextPath }/UserServlet?method=logout">退出登陆</a></div>
 	<div class="demo_main">
-		<fieldset class="demo_title">百度地图API显示多个标注点带提示的代码</fieldset>
+		<fieldset class="demo_title">武汉大学电子信息学院</fieldset>
 		<fieldset class="demo_content">
 			<div style="min-height: 300px; width: 100%;" id="map"></div>
 
@@ -97,7 +97,7 @@
     }
 
         var map = new BMap.Map("map"); // 创建Map实例
-        var point = new BMap.Point(114.367, 30.5322); //地图中心点，广州市
+        var point = new BMap.Point(114.367, 30.5322); //地图中心
         map.centerAndZoom(point, 13); // 初始化地图,设置中心点坐标和地图级别。
         map.enableScrollWheelZoom(true); //启用滚轮放大缩小
         //向地图中添加缩放控件
@@ -146,6 +146,7 @@
                             + "</br> 经纬度：" + array[i].longitude + ' , ' + array[i].latitude + "</br></p>"); // 创建信息窗口对象 
         }
         
+ 
         marker[0].addEventListener("mouseover", function() {
     		this.openInfoWindow(info[0]);
 			});
@@ -153,14 +154,30 @@
         	var url = '${pageContext.request.contextPath }/NodeDetailServlet?node_id=' + array[0].node_id + '&node_name=' + array[0].name;
         	window.location.href = url;
 			});
+        
         marker[1].addEventListener("mouseover", function() {
     		this.openInfoWindow(info[1]);
 			});
+        
+        marker[1].addEventListener("click", function() {
+        	var url = '${pageContext.request.contextPath }/NodeDetailServlet?node_id=' + array[1].node_id + '&node_name=' + array[1].name;
+        	window.location.href = url;
+			});
+        
         marker[2].addEventListener("mouseover", function() {
     		this.openInfoWindow(info[2]);
 			});
+        marker[2].addEventListener("click", function() {
+        	var url = '${pageContext.request.contextPath }/NodeDetailServlet?node_id=' + array[2].node_id + '&node_name=' + array[2].name;
+        	window.location.href = url;
+			});
+        
         marker[3].addEventListener("mouseover", function() {
     		this.openInfoWindow(info[3]);
+			});
+        marker[3].addEventListener("click", function() {
+        	var url = '${pageContext.request.contextPath }/NodeDetailServlet?node_id=' + array[3].node_id + '&node_name=' + array[3].name;
+        	window.location.href = url;
 			});
     }
     //异步调用百度js

@@ -38,7 +38,7 @@
 </script>
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>图表展示</title>
+<title>数据展示与下载</title>
 <script type="text/javascript">
 	/* var text = '${pageContext.request.contextPath }/NodeDetailServlet?node_id=${requestScope.node_id}&currentPage=1'; */
 </script>
@@ -146,7 +146,7 @@
 		</form>
 </body>
 	
-	<img src="ChartServlet"/> <br>
+	<!-- <img src="ChartServlet"/> <br> 表格移至客户端展示--> 
 	<table border="1" width="80%" align="center" cellpadding="5"
 		cellspacing="0" id="table">
 		<tr>
