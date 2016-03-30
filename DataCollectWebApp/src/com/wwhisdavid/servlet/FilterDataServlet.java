@@ -53,8 +53,10 @@ public class FilterDataServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		Socket socket = null;
+		String host = request.getRemoteHost();
+		System.out.println("remote host:" + host);
 		try {
-			socket = new Socket("127.0.0.1", 9999);
+			socket = new Socket(host, 9999);
 		} catch (Exception e) {
 			response.getWriter().write("客户端未能打开，请打开后再次查询！");
 			return;

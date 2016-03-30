@@ -69,6 +69,7 @@ public class MainViewController extends ApplicationFrame {
 	private ServerSocket ss = null;
 	private Socket socket = null;
 	private static Set<String> params = new HashSet<>();
+	private static String host = "127.0.0.1";
 	private String user;
 	private String node_id;
 	ChartPanel chartpanel = null;
@@ -578,7 +579,7 @@ public class MainViewController extends ApplicationFrame {
 	}
 
 	private void sendMsg(String command) throws UnknownHostException, IOException{
-		socket = new Socket("127.0.0.1", 12345);
+		socket = new Socket(host, 12345);
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 		bw.write(command);
 		bw.flush();
@@ -598,7 +599,7 @@ public class MainViewController extends ApplicationFrame {
 		new Thread(new Runnable() {
 			public void run() {
 				try {
-					new NettyClient().connect(12345, "127.0.0.1", command);
+					new NettyClient().connect(12345, host, command);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
