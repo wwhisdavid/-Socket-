@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedOutputStream;
@@ -80,15 +81,25 @@ public class MainViewController extends ApplicationFrame {
 	private JButton jButtonNextData = null;
 	private JButton jButtonPreData = null;
 	private JButton jButtonShowAll = null;
+	private JButton jButtonForHour = null;
+	private JButton jButtonNextHour = null;
+	private JButton jButtonPreHour = null;
 
 	private static int page = -1;
 	private static int totalPage = 0;
 	private static int totalCount = 0;
+	
+	private static int hourPage = -1;
+	private static int totalHourPage = 0;
+	private static int totalHourCount = 0;
+	private static int hourIndexStart = -1;
+	private static int hourIndexEnd = -1;
 
 	private static List<ANodeDetailEntity> totalList = new ArrayList<>();
 
 	public MainViewController(String title) {
 		super(title);
+		
 		JMenuBar jMenuBar = new JMenuBar();
 
 		JMenu jMenu = new JMenu();
@@ -109,7 +120,7 @@ public class MainViewController extends ApplicationFrame {
 						"请选择采样频率", jOptionPane.PLAIN_MESSAGE, null, options, "1h");
 				if (command != null && command.length() > 0) {
 					// 1DCCADFED7BCBB036C56A4AFB97E906F#node_id&command_time&user&command
-					System.out.println(user + "-" + node_id + "-" + System.currentTimeMillis() / 1000 +"-"+ command);
+//					System.out.println(user + "-" + node_id + "-" + System.currentTimeMillis() / 1000 +"-"+ command);
 					String message = "1DCCADFED7BCBB036C56A4AFB97E906F#"
 									+node_id
 									+"&"
@@ -136,6 +147,75 @@ public class MainViewController extends ApplicationFrame {
 			}
 		});
 
+		JMenuItem jMenuItemShowAll = new JMenuItem("显示全部数据");
+		jMenuItemShowAll.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					page = -1;
+					resetPanel(totalList, XYLineAndShapeRenderer.class);
+				} catch (InstantiationException | IllegalAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		JMenuItem jMenuItemShowForSegment = new JMenuItem("显示分段数据（20个/组）");
+		jMenuItemShowForSegment.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (totalCount > 20) {
+					jButtonNextData.setEnabled(true);
+				}
+				List<ANodeDetailEntity> pageList = new ArrayList<>();
+				for (int num = 0; num < 20; num++) {
+					pageList.add(totalList.get(num));
+				}
+				try {
+					page = 0;
+					resetPanel(pageList, XYLineAndShapeRenderer.class);
+				} catch (InstantiationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IllegalAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}	
+			}
+		});
+		
+		JMenuItem jMenuItemShowHour = new JMenuItem("按小时显示");
+		jMenuItemShowHour.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					List<ANodeDetailEntity> pageHourList = new ArrayList<>();
+					for(int i = 0; i < totalList.size(); i ++){
+						ANodeDetailEntity entity = totalList.get(i);
+						long time = entity.getRecord_time() - totalList.get(0).getRecord_time();
+						hourIndexStart = 0;
+						hourIndexEnd = i;
+						if (time > 3600) {
+							hourPage = 0;
+							jButtonNextHour.setEnabled(true);
+							break;
+						}
+						else {
+							pageHourList.add(entity);
+						}
+					}			
+					resetPanel(pageHourList, XYLineAndShapeRenderer.class);
+				} catch (InstantiationException | IllegalAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		
 		JMenuItem jMenuItem1 = new JMenuItem("打开本地文件");
 		jMenuItem1.addActionListener(new ActionListener() {
 
@@ -155,10 +235,15 @@ public class MainViewController extends ApplicationFrame {
 				String[] info = fileName.split("_");
 				user = info[0];
 				node_id = info[1];
+				
 				jMenuItemCommand.setEnabled(true);
+				jMenuItemShowAll.setEnabled(true);
+				jMenuItemShowForSegment.setEnabled(true);
+				jMenuItemShowHour.setEnabled(true);
+				
 				List<ANodeDetailEntity> list = openXMLFile(selectedFile);
 				totalList = list;
-				System.out.println(params.toString());
+//				System.out.println(params.toString());
 				try {
 					resetPanel(list, XYLineAndShapeRenderer.class);
 				} catch (InstantiationException e1) {
@@ -185,13 +270,22 @@ public class MainViewController extends ApplicationFrame {
 			}
 		});
 
+		
+
 		if (user == null || user.length() == 0) {
 			jMenuItemCommand.setEnabled(false);
+			jMenuItemShowAll.setEnabled(false);
+			jMenuItemShowForSegment.setEnabled(false);
+			jMenuItemShowHour.setEnabled(false);
 		}
 
 		jMenu.add(jMenuItem1);
 		jMenu.add(jMenuItem2);
 		jMenu.add(jMenuItemCommand);
+		jMenu.add(jMenuItemShowAll);
+		jMenu.add(jMenuItemShowForSegment);
+		jMenu.add(jMenuItemShowHour);
+		
 
 		jMenuBar.add(jMenu);
 		setJMenuBar(jMenuBar);
@@ -224,11 +318,11 @@ public class MainViewController extends ApplicationFrame {
 		for (String param : params) {
 			TimeSeries timeseries = new TimeSeries(param, org.jfree.data.time.Hour.class);
 			for (ANodeDetailEntity entity : list) {
-				System.out.println("time:" + entity.getRecord_time());
-				System.out.println(entity.getStress_y());
+//				System.out.println("time:" + entity.getRecord_time());
+//				System.out.println(entity.getStress_y());
 				switch (param) {
 				case "humidity":
-					timeseries.add(new Hour(new Date(entity.getRecord_time() * 1000)), entity.getHumidity());
+					timeseries.addOrUpdate(new Hour(new Date(entity.getRecord_time() * 1000)), entity.getHumidity());
 					break;
 				case "temperature":
 					timeseries.addOrUpdate(new Hour(new Date(entity.getRecord_time() * 1000)), entity.getTemperature());
@@ -272,7 +366,7 @@ public class MainViewController extends ApplicationFrame {
 		File file = null;
 
 		while ((data = br.readLine()) != null) { // 阻塞
-			System.out.println(data);
+//			System.out.println(data);
 
 			if (data.startsWith("whu&")) {
 				fileName = data.substring(4);
@@ -352,6 +446,12 @@ public class MainViewController extends ApplicationFrame {
 		} catch (DocumentException ex) {
 			Logger.getLogger(JFrame.class.getName()).log(Level.SEVERE, null, ex);
 		}
+		if (totalCount > 0) {
+			int time = (int)(recordList.get(totalCount - 1).getRecord_time() - recordList.get(0).getRecord_time());
+			totalHourCount = time / 3600 + (time % 3600 > 0 ? 1 : 0);
+			totalHourPage = totalHourCount;
+		}
+		System.out.println(totalHourCount+"~~~~~~~~~");
 		return recordList;
 	}
 
@@ -381,9 +481,13 @@ public class MainViewController extends ApplicationFrame {
 			throws InstantiationException, IllegalAccessException {
 		XYDataset xydataset = createDataset(list);
 		JFreeChart jfreechart = createChart(xydataset, clazz);
-		ChartPanel chartpanel = new ChartPanel(jfreechart, false);
-		chartpanel.setPreferredSize(new Dimension(500, 270));
-		chartpanel.setMouseZoomable(false);
+		if (chartpanel == null) {
+			chartpanel = new ChartPanel(jfreechart, false);
+			chartpanel.setPreferredSize(new Dimension(1000, 500));
+			chartpanel.setMouseZoomable(false);
+		}
+		chartpanel = new ChartPanel(jfreechart, false);
+		
 
 		chartpanel.addChartMouseListener(new ChartMouseListener() {
 
@@ -409,13 +513,15 @@ public class MainViewController extends ApplicationFrame {
 					XYDataset d = e.getDataset();
 					int s = e.getSeriesIndex();
 					int i = e.getItem();
-					System.out.println("X:" + d.getX(s, i) + ", Y:" + d.getY(s, i));
+//					System.out.println("X:" + d.getX(s, i) + ", Y:" + d.getY(s, i));
 					String date = DateUtil.unixTime2StringSecond(d.getX(s, i).longValue() + "");
 					jTextArea.setText("日期:" + date + "-" + "数值:" + d.getY(s, i));
 				}
 			}
 		});
-		jTextArea = new JTextArea();
+		if (jTextArea == null) {
+			jTextArea = new JTextArea();
+		}
 
 		jTextArea.setText("将鼠标移至需要查看点处！");
 		jTextArea.setFont(new Font("Default", Font.PLAIN, 10));
@@ -423,8 +529,11 @@ public class MainViewController extends ApplicationFrame {
 		jTextArea.setPreferredSize(new Dimension(180, 15));
 		jTextArea.setBackground(Color.gray);
 		jTextArea.setBounds(0, 0, 180, 15);
-
-		jButtonForBoldLine = new JButton("显示折线图");
+		
+		if (jButtonForBoldLine == null) {
+			jButtonForBoldLine = new JButton("显示折线图");
+		}
+		
 		jButtonForBoldLine.setBounds(0, 15, 90, 15);
 		jButtonForBoldLine.setFont(new Font("Default", Font.PLAIN, 10));
 		jButtonForBoldLine.addActionListener(new ActionListener() {
@@ -443,7 +552,10 @@ public class MainViewController extends ApplicationFrame {
 			}
 		});
 
-		jButtonForSpline = new JButton("显示曲线图");
+		if (jButtonForSpline == null) {
+			jButtonForSpline = new JButton("显示曲线图");
+		}
+		
 		jButtonForSpline.setBounds(95, 15, 90, 15);
 		jButtonForSpline.setFont(new Font("Default", Font.PLAIN, 10));
 		jButtonForSpline.addActionListener(new ActionListener() {
@@ -462,7 +574,10 @@ public class MainViewController extends ApplicationFrame {
 			}
 		});
 
-		jButtonForSegment = new JButton("显示分段数据(20)");
+		if (jButtonForSegment == null) {
+			jButtonForSegment = new JButton("显示分段数据(20)");
+		}
+		
 		jButtonForSegment.setBounds(190, 15, 90, 15);
 		jButtonForSegment.setFont(new Font("Default", Font.PLAIN, 9));
 		jButtonForSegment.addActionListener(new ActionListener() {
@@ -471,6 +586,10 @@ public class MainViewController extends ApplicationFrame {
 			public void actionPerformed(ActionEvent e) {
 
 				List<ANodeDetailEntity> pageList = new ArrayList<>();
+				if (totalCount > 20) {
+					jButtonNextData.setEnabled(true);
+				}
+
 				for (int num = 0; num < 20; num++) {
 					pageList.add(totalList.get(num));
 				}
@@ -487,7 +606,10 @@ public class MainViewController extends ApplicationFrame {
 			}
 		});
 
-		jButtonNextData = new JButton("下一组数据");
+		if (jButtonNextData == null) {
+			jButtonNextData = new JButton("下一组数据");
+		}
+		
 		jButtonNextData.setBounds(380, 15, 90, 15);
 		jButtonNextData.setFont(new Font("Default", Font.PLAIN, 9));
 		if (page < 0 || page == totalPage - 1) {
@@ -517,7 +639,10 @@ public class MainViewController extends ApplicationFrame {
 			}
 		});
 
-		jButtonPreData = new JButton("上一组数据");
+		if (jButtonPreData == null) {
+			jButtonPreData = new JButton("上一组数据");
+		}
+		
 		jButtonPreData.setBounds(285, 15, 90, 15);
 		jButtonPreData.setFont(new Font("Default", Font.PLAIN, 9));
 		if (page == -1 || page == 0) {
@@ -547,7 +672,10 @@ public class MainViewController extends ApplicationFrame {
 			}
 		});
 
-		jButtonShowAll = new JButton("展示所有");
+		if (jButtonShowAll == null) {
+			jButtonShowAll = new JButton("展示所有");
+		}
+		
 		jButtonShowAll.setBounds(475, 15, 80, 15);
 		jButtonShowAll.setFont(new Font("Default", Font.PLAIN, 9));
 		jButtonShowAll.addActionListener(new ActionListener() {
@@ -564,16 +692,138 @@ public class MainViewController extends ApplicationFrame {
 
 			}
 		});
+		
+		if (jButtonPreHour == null) {
+			jButtonPreHour = new JButton("上小时数据");
+		}
+		
+		jButtonPreHour.setBounds(645, 15, 90, 15);
+		jButtonPreHour.setFont(new Font("Default", Font.PLAIN, 9));
+		if (hourPage == -1 || hourPage == 0) {
+			jButtonPreHour.setEnabled(false);
+		}
+		jButtonPreHour.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				hourPage --;
+				System.out.println("Pre hourPage:"+ hourPage);
+				if (hourPage == 0) {
+					jButtonPreHour.setEnabled(false);
+				}
+				List<ANodeDetailEntity> pageHourList = new ArrayList<>();
+				hourIndexEnd = hourIndexStart;
+				for(int i = hourIndexStart - 1; i >= 0; i --){
+					ANodeDetailEntity entity = totalList.get(i);
+					long time = totalList.get(hourIndexEnd - 1).getRecord_time() - entity.getRecord_time();
+					hourIndexStart = i;
+					if (time > 3600) {
+						break;
+					}else {
+						pageHourList.add(entity);
+					}
+				}
+				try {
+					resetPanel(pageHourList, XYLineAndShapeRenderer.class);
+				} catch (InstantiationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IllegalAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+
+		if (jButtonNextHour == null) {
+			jButtonNextHour = new JButton("下小时数据");
+		}
+		
+		jButtonNextHour.setBounds(740, 15, 90, 15);
+		jButtonNextHour.setFont(new Font("Default", Font.PLAIN, 9));
+		if (hourPage < 0 || hourPage == totalHourPage - 1) {
+			jButtonNextHour.setEnabled(false);
+		}
+		
+		jButtonNextHour.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				hourPage++;
+				System.out.println("Next hourPage:"+ hourPage);
+				if (hourPage > 0) {
+					jButtonNextHour.setEnabled(true);
+				}
+				List<ANodeDetailEntity> pageHourList = new ArrayList<>();
+				hourIndexStart = hourIndexEnd;
+				
+				for(int i = hourIndexEnd; i < totalList.size() - 1; i ++){
+					ANodeDetailEntity entity = totalList.get(i);
+					long time = entity.getRecord_time() - totalList.get(hourIndexStart).getRecord_time();
+					hourIndexEnd = i;
+					if (time > 3600) {
+						break;
+					}else {
+						pageHourList.add(entity);
+					}
+				}
+				try {
+					resetPanel(pageHourList, XYLineAndShapeRenderer.class);
+				} catch (InstantiationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IllegalAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		if (jButtonForHour == null) {
+			jButtonForHour = new JButton("按小时显示");// 只显示第一个小时的先
+		}
+		
+		jButtonForHour.setBounds(560, 15, 80, 15);
+		jButtonForHour.setFont(new Font("Default", Font.PLAIN, 9));
+		jButtonForHour.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					List<ANodeDetailEntity> pageHourList = new ArrayList<>();
+					for(int i = 0; i < totalList.size(); i ++){
+						ANodeDetailEntity entity = totalList.get(i);
+						long time = entity.getRecord_time() - totalList.get(0).getRecord_time();
+						hourIndexStart = 0;
+						hourIndexEnd = i;
+						if (time > 3600) {
+							hourPage = 0;
+							jButtonNextHour.setEnabled(true);
+							break;
+						}
+						else {
+							pageHourList.add(entity);
+						}
+					}			
+					resetPanel(pageHourList, XYLineAndShapeRenderer.class);
+				} catch (InstantiationException | IllegalAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 		chartpanel.setLayout(null);
 		chartpanel.add(jTextArea);
 		chartpanel.add(jButtonForBoldLine);
 		chartpanel.add(jButtonForSpline);
-		chartpanel.add(jButtonForSegment);
+//		chartpanel.add(jButtonForSegment);
 		chartpanel.add(jButtonNextData);
 		chartpanel.add(jButtonPreData);
-		chartpanel.add(jButtonShowAll);
-
+//		chartpanel.add(jButtonShowAll);
+//		chartpanel.add(jButtonForHour);
+		chartpanel.add(jButtonNextHour);
+		chartpanel.add(jButtonPreHour);
+		
 		setContentPane(chartpanel);
 		revalidate();
 	}
@@ -589,7 +839,7 @@ public class MainViewController extends ApplicationFrame {
 		
 		BufferedReader brClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		String client = brClient.readLine();
-		System.out.println(client+"*********");;	
+//		System.out.println(client+"*********");
 		brClient.close();
 		socket.close();
 		socket = null;

@@ -1,0 +1,32 @@
+<c3p0-config>
+  <default-config>
+ 
+    <property name="jdbcUrl">jdbc:mysql://localhost:3306/DataCollectWebApp?useUnicode=true&amp;characterEncoding=utf-8</property>
+	<property name="driverClass">com.mysql.jdbc.Driver</property>
+	<property name="user">root</property>
+	<property name="password">141016</property>
+	<property name="initialPoolSize">100</property>
+	<property name="maxPoolSize">5000</property>
+	<property name="maxIdleTime">10</property>
+	<!--当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。Default: 3 --> 
+	<property name="acquireIncrement">10</property> 
+	
+    <!--
+    <user-overrides user="swaldman">
+      <property name="debugUnreturnedConnectionStackTraces">true</property>
+    </user-overrides>
+    -->
+
+  </default-config>
+
+<!--
+  <named-config name="dumbTestConfig">
+    <property name="maxStatements">200</property>
+    <property name="jdbcUrl">jdbc:test</property>
+    <user-overrides user="poop">
+      <property name="maxStatements">300</property>
+    </user-overrides>
+   </named-config>
+-->
+
+</c3p0-config>
