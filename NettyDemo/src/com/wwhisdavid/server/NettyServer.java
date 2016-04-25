@@ -24,7 +24,7 @@ public class NettyServer {
 			ServerBootstrap b = new ServerBootstrap();
 			b.group(bossGroup, workGroup)
 				.channel(NioServerSocketChannel.class)
-				.option(ChannelOption.SO_BACKLOG, 1024)
+				.option(ChannelOption.SO_BACKLOG, 1024 * 100)
 				.childHandler(new ChildChannelHandle());
 			
 			// 绑定端口，同步等待成功
@@ -46,7 +46,7 @@ public class NettyServer {
 			// TODO Auto-generated method stub
 //			ch.pipeline().addLast(new LineBasedFrameDecoder(1024));
 			ByteBuf delimiter = Unpooled.copiedBuffer("$".getBytes());
-			ch.pipeline().addLast(new DelimiterBasedFrameDecoder(1024, delimiter));
+			ch.pipeline().addLast(new DelimiterBasedFrameDecoder(1024 * 100, delimiter));
 			ch.pipeline().addLast(new StringDecoder());
 			ch.pipeline().addLast(new NettyChannelHandle()); 
 		}

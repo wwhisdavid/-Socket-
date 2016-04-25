@@ -152,13 +152,7 @@ public class MainViewController extends ApplicationFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					page = -1;
-					resetPanel(totalList, XYLineAndShapeRenderer.class);
-				} catch (InstantiationException | IllegalAccessException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				jButtonShowAll.doClick();
 			}
 		});
 		
@@ -167,23 +161,7 @@ public class MainViewController extends ApplicationFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (totalCount > 20) {
-					jButtonNextData.setEnabled(true);
-				}
-				List<ANodeDetailEntity> pageList = new ArrayList<>();
-				for (int num = 0; num < 20; num++) {
-					pageList.add(totalList.get(num));
-				}
-				try {
-					page = 0;
-					resetPanel(pageList, XYLineAndShapeRenderer.class);
-				} catch (InstantiationException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IllegalAccessException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}	
+				jButtonForSegment.doClick();
 			}
 		});
 		
@@ -192,27 +170,7 @@ public class MainViewController extends ApplicationFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					List<ANodeDetailEntity> pageHourList = new ArrayList<>();
-					for(int i = 0; i < totalList.size(); i ++){
-						ANodeDetailEntity entity = totalList.get(i);
-						long time = entity.getRecord_time() - totalList.get(0).getRecord_time();
-						hourIndexStart = 0;
-						hourIndexEnd = i;
-						if (time > 3600) {
-							hourPage = 0;
-							jButtonNextHour.setEnabled(true);
-							break;
-						}
-						else {
-							pageHourList.add(entity);
-						}
-					}			
-					resetPanel(pageHourList, XYLineAndShapeRenderer.class);
-				} catch (InstantiationException | IllegalAccessException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				jButtonForHour.doClick();
 			}
 		});
 		
@@ -479,13 +437,14 @@ public class MainViewController extends ApplicationFrame {
 
 	private <T extends XYItemRenderer> void resetPanel(List<ANodeDetailEntity> list, Class<T> clazz)
 			throws InstantiationException, IllegalAccessException {
+//		System.out.println(list.size()+"````````````");
 		XYDataset xydataset = createDataset(list);
 		JFreeChart jfreechart = createChart(xydataset, clazz);
-		if (chartpanel == null) {
-			chartpanel = new ChartPanel(jfreechart, false);
-			chartpanel.setPreferredSize(new Dimension(1000, 500));
-			chartpanel.setMouseZoomable(false);
-		}
+		
+		chartpanel = new ChartPanel(jfreechart, false);
+		chartpanel.setPreferredSize(new Dimension(1000, 500));
+		chartpanel.setMouseZoomable(false);
+		
 		chartpanel = new ChartPanel(jfreechart, false);
 		
 
@@ -530,9 +489,9 @@ public class MainViewController extends ApplicationFrame {
 		jTextArea.setBackground(Color.gray);
 		jTextArea.setBounds(0, 0, 180, 15);
 		
-		if (jButtonForBoldLine == null) {
-			jButtonForBoldLine = new JButton("显示折线图");
-		}
+		
+		
+		jButtonForBoldLine = new JButton("显示折线图");
 		
 		jButtonForBoldLine.setBounds(0, 15, 90, 15);
 		jButtonForBoldLine.setFont(new Font("Default", Font.PLAIN, 10));
@@ -552,9 +511,9 @@ public class MainViewController extends ApplicationFrame {
 			}
 		});
 
-		if (jButtonForSpline == null) {
+//		if (jButtonForSpline == null) { // 这样会一直捕获一个list
 			jButtonForSpline = new JButton("显示曲线图");
-		}
+//		}
 		
 		jButtonForSpline.setBounds(95, 15, 90, 15);
 		jButtonForSpline.setFont(new Font("Default", Font.PLAIN, 10));
@@ -563,6 +522,7 @@ public class MainViewController extends ApplicationFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
+					System.out.println(list.size());
 					resetPanel(list, XYSplineRenderer.class);
 				} catch (InstantiationException e1) {
 					// TODO Auto-generated catch block
@@ -574,9 +534,9 @@ public class MainViewController extends ApplicationFrame {
 			}
 		});
 
-		if (jButtonForSegment == null) {
+//		if (jButtonForSegment == null) {
 			jButtonForSegment = new JButton("显示分段数据(20)");
-		}
+//		}
 		
 		jButtonForSegment.setBounds(190, 15, 90, 15);
 		jButtonForSegment.setFont(new Font("Default", Font.PLAIN, 9));
@@ -606,9 +566,9 @@ public class MainViewController extends ApplicationFrame {
 			}
 		});
 
-		if (jButtonNextData == null) {
+//		if (jButtonNextData == null) {
 			jButtonNextData = new JButton("下一组数据");
-		}
+//		}
 		
 		jButtonNextData.setBounds(380, 15, 90, 15);
 		jButtonNextData.setFont(new Font("Default", Font.PLAIN, 9));
@@ -639,9 +599,9 @@ public class MainViewController extends ApplicationFrame {
 			}
 		});
 
-		if (jButtonPreData == null) {
+//		if (jButtonPreData == null) {
 			jButtonPreData = new JButton("上一组数据");
-		}
+//		}
 		
 		jButtonPreData.setBounds(285, 15, 90, 15);
 		jButtonPreData.setFont(new Font("Default", Font.PLAIN, 9));
@@ -672,9 +632,9 @@ public class MainViewController extends ApplicationFrame {
 			}
 		});
 
-		if (jButtonShowAll == null) {
+//		if (jButtonShowAll == null) {
 			jButtonShowAll = new JButton("展示所有");
-		}
+//		}
 		
 		jButtonShowAll.setBounds(475, 15, 80, 15);
 		jButtonShowAll.setFont(new Font("Default", Font.PLAIN, 9));
@@ -684,6 +644,7 @@ public class MainViewController extends ApplicationFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					page = -1;
+					hourPage = -1;
 					resetPanel(totalList, XYLineAndShapeRenderer.class);
 				} catch (InstantiationException | IllegalAccessException e1) {
 					// TODO Auto-generated catch block
@@ -693,9 +654,10 @@ public class MainViewController extends ApplicationFrame {
 			}
 		});
 		
-		if (jButtonPreHour == null) {
+		
+//		if (jButtonPreHour == null) {
 			jButtonPreHour = new JButton("上小时数据");
-		}
+//		}
 		
 		jButtonPreHour.setBounds(645, 15, 90, 15);
 		jButtonPreHour.setFont(new Font("Default", Font.PLAIN, 9));
@@ -708,6 +670,7 @@ public class MainViewController extends ApplicationFrame {
 			public void actionPerformed(ActionEvent e) {
 				hourPage --;
 				System.out.println("Pre hourPage:"+ hourPage);
+				System.out.println("hourIndexStart:"+ hourIndexStart + "   hourIndexEnd:" + hourIndexStart);
 				if (hourPage == 0) {
 					jButtonPreHour.setEnabled(false);
 				}
@@ -716,10 +679,12 @@ public class MainViewController extends ApplicationFrame {
 				for(int i = hourIndexStart - 1; i >= 0; i --){
 					ANodeDetailEntity entity = totalList.get(i);
 					long time = totalList.get(hourIndexEnd - 1).getRecord_time() - entity.getRecord_time();
-					hourIndexStart = i;
-					if (time > 3600) {
+					
+					if (time >= 3600) {
+						hourIndexStart = i + 1;
 						break;
 					}else {
+						hourIndexStart = i;
 						pageHourList.add(entity);
 					}
 				}
@@ -735,9 +700,9 @@ public class MainViewController extends ApplicationFrame {
 			}
 		});
 
-		if (jButtonNextHour == null) {
+//		if (jButtonNextHour == null) {
 			jButtonNextHour = new JButton("下小时数据");
-		}
+//		}
 		
 		jButtonNextHour.setBounds(740, 15, 90, 15);
 		jButtonNextHour.setFont(new Font("Default", Font.PLAIN, 9));
@@ -751,8 +716,9 @@ public class MainViewController extends ApplicationFrame {
 			public void actionPerformed(ActionEvent e) {
 				hourPage++;
 				System.out.println("Next hourPage:"+ hourPage);
+				System.out.println("hourIndexStart:"+ hourIndexStart + "   hourIndexEnd:" + hourIndexStart);
 				if (hourPage > 0) {
-					jButtonNextHour.setEnabled(true);
+					jButtonPreHour.setEnabled(true);
 				}
 				List<ANodeDetailEntity> pageHourList = new ArrayList<>();
 				hourIndexStart = hourIndexEnd;
@@ -761,10 +727,11 @@ public class MainViewController extends ApplicationFrame {
 					ANodeDetailEntity entity = totalList.get(i);
 					long time = entity.getRecord_time() - totalList.get(hourIndexStart).getRecord_time();
 					hourIndexEnd = i;
-					if (time > 3600) {
+					if (time >= 3600) {
 						break;
 					}else {
 						pageHourList.add(entity);
+						
 					}
 				}
 				try {
@@ -779,9 +746,9 @@ public class MainViewController extends ApplicationFrame {
 			}
 		});
 		
-		if (jButtonForHour == null) {
+//		if (jButtonForHour == null) {
 			jButtonForHour = new JButton("按小时显示");// 只显示第一个小时的先
-		}
+//		}
 		
 		jButtonForHour.setBounds(560, 15, 80, 15);
 		jButtonForHour.setFont(new Font("Default", Font.PLAIN, 9));
@@ -796,8 +763,9 @@ public class MainViewController extends ApplicationFrame {
 						long time = entity.getRecord_time() - totalList.get(0).getRecord_time();
 						hourIndexStart = 0;
 						hourIndexEnd = i;
-						if (time > 3600) {
-							hourPage = 0;
+						System.out.println("hourIndexStart:"+ hourIndexStart + "   hourIndexEnd:" + hourIndexStart);
+						hourPage = 0;
+						if (time >= 3600) {
 							jButtonNextHour.setEnabled(true);
 							break;
 						}

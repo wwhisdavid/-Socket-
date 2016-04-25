@@ -1,12 +1,24 @@
 package com.wwhisdavid.server;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.xml.crypto.Data;
 
+import org.dom4j.Branch;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.XMLWriter;
 import org.omg.CORBA.DATA_CONVERSION;
 
+import com.wwhisdavid.entity.ANodeDetailEntity;
 import com.wwhisdavid.service.ReceiveMessageService;
 import com.wwhisdavid.service.impl.ReceiveMessageServiceImpl;
 
@@ -17,17 +29,113 @@ import io.netty.channel.ChannelHandlerContext;
 
 public class NettyChannelHandle extends ChannelHandlerAdapter {
 	private ReceiveMessageService service = new ReceiveMessageServiceImpl();
+	private XMLParser parser;
+	private FileWriter fileWriter;
+	private BufferedWriter bw;
+	private File file;
+	private Document document;
+	private Element rootElem;
+	
+
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-//		ByteBuf buf =  (ByteBuf)msg;
-//		byte[] req = new byte[buf.readableBytes()];
-//		buf.readBytes(req);
-//		String body = new String(req, "utf-8");
-		String body = (String)msg;
-		
+		// ByteBuf buf = (ByteBuf)msg;
+		// byte[] req = new byte[buf.readableBytes()];
+		// buf.readBytes(req);
+		// String body = new String(req, "utf-8");
+		String body = (String) msg;
 		System.out.println("The Server recerive:" + body);
-		service.insert2mysql(body); // 失败抛异常
+		String token = body.substring(0, 3);
+		System.out.println("token:" + token);
 		
+		if (token.contains("tx")) { // txt文件传送过来开头验证
+			if (parser == null) {
+				parser = new XMLParser();
+			}
+			String mainBody = body.split("://")[1];
+			String[] names = mainBody.split("&");
+			String nameToken = mainBody.split("&")[0];
+			String fileName = null;
+			if (names.length > 1) {
+				fileName = mainBody.split("&")[1];
+				System.out.println("nameToken:" + nameToken + " fileName: " + fileName);
+			}
+			
+			if (nameToken.equals("whu")) {// 文件名
+				file = new File("/Users/shiph0ne/Documents/ServerFiles/" + fileName + ".xml");
+				if (file.exists()) {
+					return;
+				} else {
+					System.out.println("create");
+					file.createNewFile();
+					// 分解文件名意义
+					String[] nameArr = fileName.split("_");
+					String id = nameArr[0];
+					String timeStart = nameArr[1];
+					String timeEnd = nameArr[2];
+					String totalCount = nameArr[3];
+				
+					// 计算时间的差
+					SimpleDateFormat format = new SimpleDateFormat("yyyy%MM%dd-HH:mm:ss");
+					Date startDate = format.parse(timeStart);
+					long startTimestamp = startDate.getTime();
+					Date endDate = format.parse(timeEnd);
+					long endTimestamp = endDate.getTime();
+					
+					parser.time_difference = (startTimestamp - endTimestamp) / Long.valueOf(totalCount);
+					
+					//1.在内存创建xml文档
+					document = DocumentHelper.createDocument();
+					rootElem = document.addElement("dataList");
+				}
+
+				if (fileName.length() == 0) {
+					return;
+				}
+
+				fileWriter = new FileWriter(file);
+				bw = new BufferedWriter(fileWriter);
+
+			} else if (mainBody.equals("end")) {// 关闭资源
+				fileWriter.close();
+				bw.close();
+			} else {// 一条数据
+				String[] mainBodys = mainBody.split("\t");
+				System.out.println(mainBodys[0] + "-" + mainBodys[1] + "-" + mainBodys[2]);
+				
+				Element nodeElem = rootElem.addElement("record");
+				nodeElem.addAttribute("record_time", );
+				parser.count ++;
+//					
+//						if (string.equals("humidity")) {
+//							nodeElem.addElement("humidity").setText(nodeDetailEntity.getHumidity() + "");
+//						}
+//						if (string.equals("temperature")) {
+//							nodeElem.addElement("temperature").setText(nodeDetailEntity.getTemperature() + "");
+//						}
+//						if (string.equals("stress-x")) {
+//							nodeElem.addElement("stress-x").setText(nodeDetailEntity.getStress_x() + "");
+//						}
+//						if (string.equals("stress-y")) {
+//							nodeElem.addElement("stress-y").setText(nodeDetailEntity.getStress_y() + "");
+//						}
+//						if (string.equals("stress-z")) {
+//							nodeElem.addElement("stress-z").setText(nodeDetailEntity.getStress_z() + "");
+//						}
+					
+				
+//					
+//				FileOutputStream out = new FileOutputStream(download);
+//				OutputFormat format = OutputFormat.createPrettyPrint();
+//				format.setEncoding("utf-8");
+//				XMLWriter writer = new XMLWriter(out, format);
+//				
+//				writer.write(document);
+//				writer.close();
+			}
+		} else
+			service.insert2mysql(body); // 失败抛异常
+
 		ByteBuf resp = Unpooled.copiedBuffer("收到了$".getBytes());
 		ctx.write(resp);
 	}
@@ -42,8 +150,9 @@ public class NettyChannelHandle extends ChannelHandlerAdapter {
 		ctx.close();
 	}
 	
-	
-	
-	
-	
+	private class XMLParser{
+		public long time_difference;
+		public int count = 0; 
+	}
+
 }
