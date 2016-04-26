@@ -267,32 +267,32 @@ public class MainViewController extends ApplicationFrame {
 		xyplot.setRangeCrosshairVisible(true);
 		resetRender(clazz, xyplot);
 		DateAxis dateaxis = (DateAxis) xyplot.getDomainAxis();
-		dateaxis.setDateFormatOverride(new SimpleDateFormat("yyyy-MM-dd:HH"));
+		dateaxis.setDateFormatOverride(new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss"));
 		return jfreechart;
 	}
 
 	private static XYDataset createDataset(List<ANodeDetailEntity> list) {
 		TimeSeriesCollection timeseriescollection = new TimeSeriesCollection();
 		for (String param : params) {
-			TimeSeries timeseries = new TimeSeries(param, org.jfree.data.time.Hour.class);
+			TimeSeries timeseries = new TimeSeries(param, org.jfree.data.time.Second.class);
 			for (ANodeDetailEntity entity : list) {
 //				System.out.println("time:" + entity.getRecord_time());
 //				System.out.println(entity.getStress_y());
 				switch (param) {
 				case "humidity":
-					timeseries.addOrUpdate(new Hour(new Date(entity.getRecord_time() * 1000)), entity.getHumidity());
+					timeseries.addOrUpdate(new Second(new Date(entity.getRecord_time() * 1000)), entity.getHumidity());
 					break;
 				case "temperature":
-					timeseries.addOrUpdate(new Hour(new Date(entity.getRecord_time() * 1000)), entity.getTemperature());
+					timeseries.addOrUpdate(new Second(new Date(entity.getRecord_time() * 1000)), entity.getTemperature());
 					break;
 				case "stress-x":
-					timeseries.addOrUpdate(new Hour(new Date(entity.getRecord_time() * 1000)), 1);
+					timeseries.addOrUpdate(new Second(new Date(entity.getRecord_time() * 1000)), 1);
 					break;
 				case "stress-y":
-					timeseries.addOrUpdate(new Hour(new Date(entity.getRecord_time() * 1000)), entity.getStress_y());
+					timeseries.addOrUpdate(new Second(new Date(entity.getRecord_time() * 1000)), entity.getStress_y());
 					break;
 				case "stress-z":
-					timeseries.addOrUpdate(new Hour(new Date(entity.getRecord_time() * 1000)), entity.getStress_z());
+					timeseries.addOrUpdate(new Second(new Date(entity.getRecord_time() * 1000)), entity.getStress_z());
 					break;
 				default:
 					break;
@@ -544,7 +544,7 @@ public class MainViewController extends ApplicationFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				hourPage = -1;
 				List<ANodeDetailEntity> pageList = new ArrayList<>();
 				if (totalCount > 20) {
 					jButtonNextData.setEnabled(true);
@@ -757,6 +757,7 @@ public class MainViewController extends ApplicationFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
+					page = -1;
 					jButtonNextData.setEnabled(false);
 					List<ANodeDetailEntity> pageHourList = new ArrayList<>();
 					for(int i = 0; i < totalList.size(); i ++){
