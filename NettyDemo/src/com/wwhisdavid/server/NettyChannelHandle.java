@@ -78,11 +78,11 @@ public class NettyChannelHandle extends ChannelHandlerAdapter {
 					// 计算时间的差
 					SimpleDateFormat format = new SimpleDateFormat("yyyy%MM%dd-HH:mm:ss");
 					Date startDate = format.parse(timeStart);
-					long startTimestamp = startDate.getTime();
+					parser.startTimestamp = startDate.getTime();
 					Date endDate = format.parse(timeEnd);
-					long endTimestamp = endDate.getTime();
-					
-					parser.time_difference = (startTimestamp - endTimestamp) / Long.valueOf(totalCount);
+					parser.endTimestamp = endDate.getTime();
+
+					parser.time_difference = (parser.endTimestamp - parser.startTimestamp) / Long.valueOf(totalCount);
 					
 					//1.在内存创建xml文档
 					document = DocumentHelper.createDocument();
@@ -93,49 +93,33 @@ public class NettyChannelHandle extends ChannelHandlerAdapter {
 					return;
 				}
 
-				fileWriter = new FileWriter(file);
-				bw = new BufferedWriter(fileWriter);
-
+//				fileWriter = new FileWriter(file);
+//				bw = new BufferedWriter(fileWriter);
 			} else if (mainBody.equals("end")) {// 关闭资源
-				fileWriter.close();
-				bw.close();
+				
+				FileOutputStream out = new FileOutputStream(file);
+				OutputFormat format = OutputFormat.createPrettyPrint();
+				format.setEncoding("utf-8");
+				XMLWriter writer = new XMLWriter(out, format);
+				
+				writer.write(document);
+				writer.close();
+//				fileWriter.close();
+//				bw.close();
 			} else {// 一条数据
 				String[] mainBodys = mainBody.split("\t");
 				System.out.println(mainBodys[0] + "-" + mainBodys[1] + "-" + mainBodys[2]);
 				
 				Element nodeElem = rootElem.addElement("record");
-				nodeElem.addAttribute("record_time", );
+				nodeElem.addAttribute("record_time", (parser.startTimestamp + parser.count * parser.time_difference) / 1000 + "");
 				parser.count ++;
-//					
-//						if (string.equals("humidity")) {
-//							nodeElem.addElement("humidity").setText(nodeDetailEntity.getHumidity() + "");
-//						}
-//						if (string.equals("temperature")) {
-//							nodeElem.addElement("temperature").setText(nodeDetailEntity.getTemperature() + "");
-//						}
-//						if (string.equals("stress-x")) {
-//							nodeElem.addElement("stress-x").setText(nodeDetailEntity.getStress_x() + "");
-//						}
-//						if (string.equals("stress-y")) {
-//							nodeElem.addElement("stress-y").setText(nodeDetailEntity.getStress_y() + "");
-//						}
-//						if (string.equals("stress-z")) {
-//							nodeElem.addElement("stress-z").setText(nodeDetailEntity.getStress_z() + "");
-//						}
-					
-				
-//					
-//				FileOutputStream out = new FileOutputStream(download);
-//				OutputFormat format = OutputFormat.createPrettyPrint();
-//				format.setEncoding("utf-8");
-//				XMLWriter writer = new XMLWriter(out, format);
-//				
-//				writer.write(document);
-//				writer.close();
+				nodeElem.addElement("stress-x").setText(mainBodys[0]);
+				nodeElem.addElement("stress-y").setText(mainBodys[1]);
+				nodeElem.addElement("stress-z").setText(mainBodys[2]);
 			}
 		} else
 			service.insert2mysql(body); // 失败抛异常
-
+		System.out.println(parser.startTimestamp + "--------=======" + parser.endTimestamp + "*******" + parser.time_difference);
 		ByteBuf resp = Unpooled.copiedBuffer("收到了$".getBytes());
 		ctx.write(resp);
 	}
@@ -152,7 +136,9 @@ public class NettyChannelHandle extends ChannelHandlerAdapter {
 	
 	private class XMLParser{
 		public long time_difference;
-		public int count = 0; 
+		public long startTimestamp;
+		public long endTimestamp;
+		public long count = 0; 
 	}
 
 }

@@ -24,6 +24,7 @@ public class NodeDetailServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String uri;
 	private NodeDetailService service = new NodeDetailServiceImpl();
+	private PageBean<?> pb;
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -69,16 +70,20 @@ public class NodeDetailServlet extends HttpServlet {
 					queryNodeDetailEntity.getParams().add(request.getParameter(string));
 				}
 			}
-
+			System.out.println("currentpage:" + currentPage + "--");
 			if (queryNodeDetailEntity.getNode_id() == null || "".equals(queryNodeDetailEntity.getNode_id())) {
 				// 去项目列表
 				return;
 			}
+			if (pb == null) {
+				pb = new PageBean();
+			}
 			
-			PageBean<?> pb = new PageBean();
 			pb.setCurrentPage(currentPage);
+			
 		
 			service.getAll(pb, queryNodeDetailEntity);
+			
 			
 //			System.out.println("detail:"+pb.getPageData().get(0).toString());
 			

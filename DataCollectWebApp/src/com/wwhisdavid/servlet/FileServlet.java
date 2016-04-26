@@ -78,9 +78,11 @@ public class FileServlet extends HttpServlet {
 				String fileName = list[i];
 				System.out.println("file:"+fileName);
 				// 短名
-				String shortName = fileName.substring(fileName.lastIndexOf("#") + 1);
+				String shortName = fileName.replace("%", "/");
 				// 封装
-				fileNames.put(fileName, fileName);
+				if(fileName.contains(".xml")){
+					fileNames.put(fileName, shortName);
+				}
 			}
 		}
 
@@ -106,7 +108,7 @@ public class FileServlet extends HttpServlet {
 				fileName = new String(fileName.getBytes("ISO8859-1"),"UTF-8");
 				
 				// 先获取上传目录路径
-				String basePath = getServletContext().getRealPath("/xmlfile");
+				String basePath = "/Users/shiph0ne/Documents/ServerFiles";
 				// 获取一个文件流
 				InputStream in = new FileInputStream(new File(basePath,fileName));
 				
@@ -125,7 +127,6 @@ public class FileServlet extends HttpServlet {
 				// 关闭
 				out.close();
 				in.close();
-				
 	}
 
 	/**

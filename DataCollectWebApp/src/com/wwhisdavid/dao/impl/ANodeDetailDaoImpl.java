@@ -45,20 +45,24 @@ public class ANodeDetailDaoImpl implements NodeDetailDao {
 				+ "where d.node_id=? and record_time > ? and record_time < ?";
 		QueryRunner queryRunner = JdbcUtil.getRunner();
 		try {
-			List<ANodeDetailEntity> list = queryRunner.query(
-					sql, 
-					new BeanListHandler<ANodeDetailEntity>(ANodeDetailEntity.class) ,
-					queryNodeDetailEntity.getNode_id(), 
-					queryNodeDetailEntity.getFromTime(), 
-					queryNodeDetailEntity.getToTime()
-					);
-			pb.setTotalData(list); // 所有数据
+			if (pb.getTotalData() == null) {
+				System.out.println("查询数据库数据");
+				List<ANodeDetailEntity> list = queryRunner.query(
+						sql, 
+						new BeanListHandler<ANodeDetailEntity>(ANodeDetailEntity.class) ,
+						queryNodeDetailEntity.getNode_id(), 
+						queryNodeDetailEntity.getFromTime(), 
+						queryNodeDetailEntity.getToTime()
+						);
+				pb.setTotalData(list); // 所有数据
+			}
+			
 			List<ANodeDetailEntity> pageList = new ArrayList<ANodeDetailEntity>();
 			ANodeDetailEntity entity = null;
-			int remaindedCount = list.size() - index;
+			int remaindedCount = pb.getTotalData().size() - index;
 			count = remaindedCount >= count ? index + count : totalCount; 
 			for (int i = index; i < count; i++) {
-				entity = list.get(i);
+				entity = (ANodeDetailEntity) pb.getTotalData().get(i);
 				pageList.add(entity);
 			}
 			pb.setPageData(pageList);

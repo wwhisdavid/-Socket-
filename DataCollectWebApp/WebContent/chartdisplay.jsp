@@ -46,6 +46,11 @@
 <body>
 	<%-- <c:out value="${requestScope.node_name}"></c:out> --%>
 	<%--onsubmit="return checkAll()" --%>
+	<div style="height:50px;text-align:right;">
+		您好，<c:out value="${sessionScope.loginName}"/> 
+		&nbsp;&nbsp;<a href="${pageContext.request.contextPath }/FileServlet?method=downList">文件下载列表 </a>
+		&nbsp;&nbsp;<a href="${pageContext.request.contextPath }/UserServlet?method=logout">退出登陆</a>
+	</div>
 	<form action="${pageContext.request.contextPath }/FilterDataServlet" method="get"  > <!--如果表单提交时候触发的方法返回是false,那么该表单不允许提交，如果返回的是true允许提交 -->
 			<table border="1px" width="50%" align="center" cellspacing="0px" cellpadding="3px">
 				

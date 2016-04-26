@@ -541,7 +541,7 @@ public class MainViewController extends ApplicationFrame {
 		jButtonForSegment.setBounds(190, 15, 90, 15);
 		jButtonForSegment.setFont(new Font("Default", Font.PLAIN, 9));
 		jButtonForSegment.addActionListener(new ActionListener() {
-
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
@@ -549,7 +549,7 @@ public class MainViewController extends ApplicationFrame {
 				if (totalCount > 20) {
 					jButtonNextData.setEnabled(true);
 				}
-
+				jButtonNextHour.setEnabled(false);
 				for (int num = 0; num < 20; num++) {
 					pageList.add(totalList.get(num));
 				}
@@ -757,6 +757,7 @@ public class MainViewController extends ApplicationFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
+					jButtonNextData.setEnabled(false);
 					List<ANodeDetailEntity> pageHourList = new ArrayList<>();
 					for(int i = 0; i < totalList.size(); i ++){
 						ANodeDetailEntity entity = totalList.get(i);

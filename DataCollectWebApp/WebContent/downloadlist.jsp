@@ -25,7 +25,7 @@
 				<td>
 					<%--<a href="${pageContext.request.contextPath }/fileServlet?method=down&..">下载</a>--%>
 					<!-- 构建一个地址  -->
-					<c:url var="url" value="fileServlet">
+					<c:url var="url" value="FileServlet">
 						<c:param name="method" value="down"></c:param>
 						<c:param name="fileName" value="${en.key}"></c:param>
 					</c:url>
