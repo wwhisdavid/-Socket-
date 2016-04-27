@@ -286,7 +286,7 @@ public class MainViewController extends ApplicationFrame {
 					timeseries.addOrUpdate(new Second(new Date(entity.getRecord_time() * 1000)), entity.getTemperature());
 					break;
 				case "stress-x":
-					timeseries.addOrUpdate(new Second(new Date(entity.getRecord_time() * 1000)), 1);
+					timeseries.addOrUpdate(new Second(new Date(entity.getRecord_time() * 1000)), entity.getStress_x());
 					break;
 				case "stress-y":
 					timeseries.addOrUpdate(new Second(new Date(entity.getRecord_time() * 1000)), entity.getStress_y());
