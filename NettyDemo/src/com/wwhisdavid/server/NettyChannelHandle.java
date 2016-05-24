@@ -62,7 +62,7 @@ public class NettyChannelHandle extends ChannelHandlerAdapter {
 			}
 			
 			if (nameToken.equals("whu")) {// 文件名
-				file = new File("/Users/shiph0ne/Documents/ServerFiles/" + fileName + ".xml");
+				file = new File("/Users/shiph0ne/Desktop/" + fileName + ".xml");
 				if (file.exists()) {
 					return;
 				} else {
